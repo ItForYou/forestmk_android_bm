@@ -219,7 +219,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("history_back", now_his.toString());
 
         WebBackForwardList list = null;
-        String back2_url ="", backurl="";
+        String back2_url ="", backurl="",last="";
+
+        if(now_his.size()>0) {
+            last = now_his.get(now_his.size() - 1);
+        }
+
         settings.setSupportZoom(false);   //화면 확대축소
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
@@ -235,28 +240,28 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("history_webview", back2_url);
             }
 
+
+
         } catch (NullPointerException e) {
 
             e.printStackTrace();
 
         }
 
-        if(backurl.contains("register_form.php") || backurl.contains("password_lost.php") ||
-                (backurl.contains("board.php") && backurl.contains("wr_id=")) || backurl.contains("mypage.php") ||
-                backurl.contains("login.php") || backurl.contains("mymap.php") ) {
+        if(last.contains("register_form.php") || last.contains("password_lost.php") ||
+                (last.contains("board.php") && last.contains("wr_id=")) || last.contains("mypage.php") ||
+                last.contains("login.php") || last.contains("mymap.php") ) {
 
-            Log.d("NoRefresh!!", webView.getUrl());
+            Log.d("history_NoRefresh!!", backurl);
             Norefresh();
 
         }
 
         else{
 
-            Log.d("YesRefresh!!", webView.getUrl());
+            Log.d("history_YesRefresh!!", backurl);
             Yesrefresh();
-
         }
-
 
 
         if (flg_modal==1 && ((webView.getUrl().contains("bo_table=deal") && !webView.getUrl().contains("wr_id=")) || webView.getUrl().contains("recent_list.php"))){
@@ -310,7 +315,6 @@ public class MainActivity extends AppCompatActivity {
 
         else if(now_his.size()>0) {
 
-            String last = now_his.get(now_his.size() - 1);
             Log.d("history_back_last", last);
             if(last.equals("intent")) {
 
@@ -333,6 +337,7 @@ public class MainActivity extends AppCompatActivity {
                         bm.removelast();
                         bm.removelast();
                         onBackPressed();
+                        back2_url ="";
                     }
                     else{
                         bm.removelast();

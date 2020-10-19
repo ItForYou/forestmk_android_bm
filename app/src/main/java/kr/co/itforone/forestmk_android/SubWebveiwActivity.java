@@ -415,7 +415,11 @@ public class SubWebveiwActivity extends AppCompatActivity {
         Log.d("history_back", now_his.toString());
 
         WebBackForwardList list = null;
-        String back2_url ="", backurl="";
+        String back2_url ="", backurl="", last="";
+
+        if(now_his.size()>0) {
+            last = now_his.get(now_his.size() - 1);
+        }
 
         settings.setSupportZoom(false);   //화면 확대축소
         settings.setBuiltInZoomControls(false);
@@ -438,21 +442,24 @@ public class SubWebveiwActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if(backurl.contains("register_form.php") || backurl.contains("password_lost.php") ||
-                (backurl.contains("board.php") && backurl.contains("wr_id=")) || backurl.contains("mypage.php") ||
-                backurl.contains("login.php") || backurl.contains("mymap.php") ) {
+        if(last.contains("register_form.php") || last.contains("password_lost.php") ||
+                (last.contains("board.php") && last.contains("wr_id=")) || last.contains("mypage.php") ||
+                last.contains("login.php") || last.contains("mymap.php") ) {
 
-            Log.d("NoRefresh!!", webView.getUrl());
+            Log.d("history_NoRefresh!!", last);
             Norefresh();
+
 
         }
 
         else{
 
-            Log.d("YesRefresh!!", webView.getUrl());
+            Log.d("history_YesRefresh!!", last);
             Yesrefresh();
 
         }
+
+
 
 
 
@@ -587,7 +594,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
         else if(now_his.size()>0){
 
-            String last = now_his.get(now_his.size() - 1);
+
             Log.d("history_back_last", last);
 
             if(last.equals("intent")) {
@@ -616,6 +623,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                         bm.removelast();
                         bm.removelast();
                         onBackPressed();
+                        back2_url ="";
                     }
                     else{
                         bm.removelast();
@@ -628,6 +636,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                         bm.removelast();
                         bm.removelast();
                         onBackPressed();
+                        back2_url ="";
                     }
                     else{
                         bm.removelast();
