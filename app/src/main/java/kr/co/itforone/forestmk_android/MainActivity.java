@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.webView)    WebView webView;
     @BindView(R.id.refreshlayout)    SwipeRefreshLayout refreshlayout;
 
-    String token = "";
+    String token = "", pushurl="";
     public int flg_refresh = 1;
     ValueCallback<Uri[]> filePathCallbackLollipop;
     Dialog current_dialog;
@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
                         token = task.getResult().getToken();
                     }
                 });
+
+
         settings = webView.getSettings();
         webView.setWebChromeClient(new ChromeManager(this,this));
         webView.setWebViewClient(new ViewManager(this, this));
@@ -171,13 +173,33 @@ public class MainActivity extends AppCompatActivity {
         String pwd = pref.getString("pwd", "");
 
        // Toast.makeText(getApplicationContext(),id+"-"+pwd,Toast.LENGTH_LONG).show();
+        Intent push = getIntent();
 
-        if(!id.isEmpty() && !pwd.isEmpty()){
-            webView.loadUrl(getString(R.string.login)+"mb_id="+id+"&mb_password="+pwd);
+        if (push.getStringExtra("goUrl") != null)
+            pushurl = push.getStringExtra("goUrl");
+
+        Log.d("pushurl", pushurl);
+
+        if(!pushurl.isEmpty() && !pushurl.equals("")){
+            if(!id.isEmpty() && !pwd.isEmpty()) {
+                Log.d("loadurl1", "true");
+                bm.addHitory(getString(R.string.login) + "mb_id=" + id + "&mb_password=" + pwd);
+                webView.loadUrl(pushurl);
+            }
+            else{
+                Log.d("loadurl2", "true");
+                bm.addHitory(getString(R.string.home));
+                webView.loadUrl(pushurl);
+            }
+        }
+        else if(!id.isEmpty() && !pwd.isEmpty()){
+            Log.d("loadurl3", "true");
+                webView.loadUrl(getString(R.string.login) + "mb_id=" + id + "&mb_password=" + pwd);
          //   webView.clearCache(true);
          //   webView.clearHistory();
         }
         else {
+            Log.d("loadurl4", "true");
             webView.loadUrl(getString(R.string.home));
         }
 

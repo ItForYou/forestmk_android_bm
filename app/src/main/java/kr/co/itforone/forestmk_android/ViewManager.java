@@ -105,6 +105,8 @@ class ViewManager extends WebViewClient{
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
+        Log.d("settoken",mainActivity.token);
+
         view.loadUrl("javascript:setToken('"+mainActivity.token+"')");
    /*    if(url.contains("login_check.php") || url.contains("write_update.php") || url.contains("register_form_update.php") || url.contains("write_comment_update.php")){
             mainActivity.webView.goBack();

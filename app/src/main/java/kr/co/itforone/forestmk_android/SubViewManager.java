@@ -102,7 +102,6 @@ class SubViewManager extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-
         /*if(url.contains("login_check.php") || url.contains("write_update.php") || url.contains("register_form_update.php")){
             WebBackForwardList list = null;
             String backurl ="";
