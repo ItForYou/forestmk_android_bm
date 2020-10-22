@@ -4,6 +4,7 @@ package kr.co.itforone.forestmk_android;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
@@ -96,23 +97,33 @@ class WebviewJavainterface {
 
     @JavascriptInterface
     public void getlocation() {
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = SubWebveiwActivity.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+        if(gps_enabled) {
+            double lat = mainActivity.getlat() * 1000000;
+            double lng = mainActivity.getlng() * 1000000;
+            lat = Math.ceil(lat) / 1000000;
+            lng = Math.ceil(lng) / 1000000;
+            double finalLat = lat;
+            double finalLng = lng;
+            mainActivity.webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mainActivity.webView.getUrl().contains("register_form.php") || mainActivity.webView.getUrl().contains("mymap.php"))
+                        mainActivity.webView.loadUrl("javascript:trans_addr('" + finalLat + "','" + finalLng + "');");
+                    else
+                        mainActivity.webView.loadUrl("javascript:sort_distance('" + finalLat + "','" + finalLng + "');");
 
-        double lat = mainActivity.getlat() * 1000000;
-        double lng = mainActivity.getlng() * 1000000;
-        lat = Math.ceil(lat) / 1000000;
-        lng = Math.ceil(lng) / 1000000;
-        double finalLat = lat;
-        double finalLng = lng;
-        mainActivity.webView.post(new Runnable() {
-            @Override
-            public void run() {
-                if(mainActivity.webView.getUrl().contains("register_form.php") || mainActivity.webView.getUrl().contains("mymap.php"))
-                    mainActivity.webView.loadUrl("javascript:trans_addr('" + finalLat + "','" + finalLng + "');");
-                else
-                    mainActivity.webView.loadUrl("javascript:sort_distance('" + finalLat + "','" + finalLng + "');");
-            }
-        });
-         Toast.makeText(mainActivity.getApplicationContext(),""+lat+" , "+lng, Toast.LENGTH_LONG).show();
+                    Log.d("get_location", finalLat + "," + finalLng + mainActivity.webView.getUrl());
+                }
+            });
+        }
+        else{
+            mainActivity.settingModal();
+        }
+        // Toast.makeText(mainActivity.getApplicationContext(),""+lat+" , "+lng, Toast.LENGTH_LONG).show();
 
     }
 

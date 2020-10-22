@@ -398,7 +398,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        builder.setCancelable(false);
+        builder.setCancelable(true);
         AlertDialog dialog = builder.create();
         //  mainActivity.current_dialog = dialog;
         dialog.show();
@@ -509,7 +509,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
             bm.removeAllHistory();
 
         }
-        else if(webView.getUrl().contains("http://14.48.175.177/bbs/register_form.php?w=u")){
+        else if(webView.getUrl().contains("http://forestmarket.co.kr/bbs/register_form.php?w=u")){
 
             Confirm_alert("수정을 취소하시겠습니까?");
 
@@ -748,7 +748,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
         }
 
-        else if(webView.getUrl().contains("http://14.48.175.177/bbs/register_form.php?w=u")){
+        else if(webView.getUrl().contains("http://forestmarket.co.kr/bbs/register_form.php?w=u")){
 
             Confirm_alert("수정을 취소하시겠습니까?");
 

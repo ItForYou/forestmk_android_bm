@@ -66,14 +66,18 @@ class SubWebviewJavainterface {
 
                 @Override
                 public void run() {
+
                     if (activity.webView.getUrl().contains("register_form.php") || activity.webView.getUrl().contains("mymap.php"))
                         activity.webView.loadUrl("javascript:trans_addr('" + finalLat + "','" + finalLng + "');");
                     else
                         activity.webView.loadUrl("javascript:sort_distance('" + finalLat + "','" + finalLng + "');");
+
+                    Log.d("get_location",finalLat+","+finalLng + activity.webView.getUrl());
+
                 }
             });
 
-            Toast.makeText(activity.getApplicationContext(), "" + lat + " , " + lng, Toast.LENGTH_LONG).show();
+        //    Toast.makeText(activity.getApplicationContext(), "" + lat + " , " + lng, Toast.LENGTH_LONG).show();
         }
         else{
             activity.settingModal();

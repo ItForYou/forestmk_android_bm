@@ -24,6 +24,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         }else {
             return false;
         }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }else{
                     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                    /* LocationPosition.act=MainActivity.this;
                     LocationPosition.setPosition(this);
                     if(LocationPosition.lng==0.0){
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         // Get new Instance ID token
                         token = task.getResult().getToken();
                     }
-                });
+        });
 
 
         settings = webView.getSettings();
@@ -590,15 +592,25 @@ public class MainActivity extends AppCompatActivity {
         this.filePathCallbackLollipop = filePathCallbackLollipop;
     }
 
+    @SuppressLint("MissingPermission")
     public double getlat(){
         //Toast.makeText(getApplicationContext(),""+location.getLatitude() + "//" +location.getLongitude(),Toast.LENGTH_LONG).show();
+        if(hasPermissions(PERMISSIONS)) {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
         if(location!=null) {
             return location.getLatitude();
         }
         else return 0;
     }
 
+    @SuppressLint("MissingPermission")
     public double getlng(){
+        if(hasPermissions(PERMISSIONS)) {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
         //Toast.makeText(getApplicationContext(),""+location.getLatitude() + "//" +location.getLongitude(),Toast.LENGTH_LONG).show();
         if(location!=null) {
             return location.getLongitude();
@@ -619,5 +631,31 @@ public class MainActivity extends AppCompatActivity {
         Log.d("nowrefre",String.valueOf(now_refreshlayout));
         //Log.d("nowrefre","false");
     }
+    public void settingModal(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("");
+        builder.setMessage("핸드폰 위치를 켜주세요!");
+        builder.setNegativeButton("설정하기",   new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        });
+        builder.setPositiveButton("확인",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setCancelable(true);
+        AlertDialog dialog = builder.create();
+        //  mainActivity.current_dialog = dialog;
+        dialog.show();
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setTextColor(Color.parseColor("#9dc543"));
+        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        negativeButton.setTextColor(Color.parseColor("#000000"));
+    }
+
 
 }
