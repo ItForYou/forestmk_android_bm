@@ -122,6 +122,23 @@ class SubWebviewJavainterface {
 
     }
 
+
+    @JavascriptInterface
+    public void show_confirm(String message, String state, String href){
+
+        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
+        activity.Confirm_alert_cancleable(message,state,href);
+
+    }
+
+    @JavascriptInterface
+    public void show_alert(String message){
+
+        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
+        activity.alert(message);
+
+    }
+
     @JavascriptInterface
     public void setflgmodal2(int i) {
        // Toast.makeText(activity.getApplicationContext(),"setflgmodal!!", Toast.LENGTH_LONG).show();

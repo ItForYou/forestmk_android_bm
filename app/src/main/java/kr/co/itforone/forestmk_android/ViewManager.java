@@ -33,7 +33,7 @@ class ViewManager extends WebViewClient{
            // Toast.makeText(mainActivity.getApplicationContext(),"test-"+url, Toast.LENGTH_LONG).show();
 
         boolean lastchk = mainActivity.now_refreshlayout;
-
+        Log.d("backpress_should",url);
         if(url.contains("img_view.php")){
 
             mainActivity.settings.setSupportZoom(true);   //화면 확대축소

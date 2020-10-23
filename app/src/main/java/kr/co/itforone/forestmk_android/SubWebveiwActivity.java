@@ -459,10 +459,6 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
         }
 
-
-
-
-
         if (flg_modal==1 && ((webView.getUrl().contains("bo_table=deal") && !webView.getUrl().contains("wr_id=")) || webView.getUrl().contains("recent_list.php"))){
 
             Log.d("backpress_closemd1", webView.getUrl());
@@ -609,14 +605,14 @@ public class SubWebveiwActivity extends AppCompatActivity {
             }
 
             else{
-                if(last.contains("login_check.php") || last.contains("register_form_update.php")
+                if(last.contains("login_check.php") || last.contains("register_form_update.php") || last.contains("delete_comment.php")
                 ){
 
                     bm.removelast();
                     onBackPressed();
 
                 }
-                else if(last.contains("write_update.php")){
+                else if(last.contains("write_update.php") ){
 
                     if(back2_url.contains("w=u")){
                         bm.removelast();
@@ -625,6 +621,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                         onBackPressed();
                         back2_url ="";
                     }
+
                     else{
                         bm.removelast();
                         onBackPressed();
@@ -643,7 +640,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                         onBackPressed();
                     }
                 }
-                else if(last.contains("delete_comment.php") || last.contains("delete.php") ){
+                else if( last.contains("delete.php") ){
                     bm.removelast();
                     bm.removelast();
                     onBackPressed();
@@ -920,6 +917,96 @@ public class SubWebveiwActivity extends AppCompatActivity {
         positiveButton.setTextColor(Color.parseColor("#9dc543"));
 
         negativeButton.setTextColor(Color.parseColor("#ff0000"));
+
+    }
+    public void Confirm_alert_cancleable(String Message,String state, String href){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SubWebveiwActivity.this);
+        // Set a title for alert dialog
+        builder.setTitle("");
+
+        // Show a message on alert dialog
+        builder.setMessage(Message);
+        // Set the positive button
+        builder.setPositiveButton("확인",   new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch(state){
+
+                    case "delete_deal" :
+                        webView.post(new Runnable() {
+
+                            public void run() {
+                                //String temp_url = href.substring(1,href.length());
+                                Log.d("confirm_url",href);
+                                webView.loadUrl(href);
+                            }
+                        });
+
+                            break;
+                    case "logout":
+                        webView.post(new Runnable() {
+                            public void run() {
+                                webView.loadUrl(getString(R.string.g5_bbs)+href);
+                            }
+                        });
+                        break;
+                    case "delete_comment":
+                        webView.post(new Runnable() {
+                            public void run() {
+                                String temp_url = href.substring(1,href.length());
+                                webView.loadUrl(getString(R.string.g5_bbs)+temp_url);
+                            }
+                        });
+                        break;
+
+                    default: break;
+
+                }
+
+            }
+        });
+        // Set the negative button
+        builder.setNegativeButton("취소",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.setCancelable(true);
+        // Create the alert dialog
+        AlertDialog dialog = builder.create();
+        // Finally, display the alert dialog
+        //   current_dialog = dialog;
+        dialog.show();
+        // Get the alert dialog buttons reference
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+        // Change the alert dialog buttons text and background color
+        positiveButton.setTextColor(Color.parseColor("#9dc543"));
+
+        negativeButton.setTextColor(Color.parseColor("#ff0000"));
+
+    }
+
+    public void alert(String text){
+
+        Log.d("alert","show");
+        AlertDialog.Builder builder = new AlertDialog.Builder(SubWebveiwActivity.this);
+        builder.setTitle("");
+        builder.setMessage(text);
+        builder.setPositiveButton("확인",   new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setCancelable(true);
+        AlertDialog dialog = builder.create();
+        //  mainActivity.current_dialog = dialog;
+        dialog.show();
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setTextColor(Color.parseColor("#9dc543"));
 
     }
 
