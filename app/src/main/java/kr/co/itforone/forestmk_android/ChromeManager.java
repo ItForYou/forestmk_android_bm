@@ -12,6 +12,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+
 class ChromeManager extends WebChromeClient {
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
@@ -25,21 +29,10 @@ class ChromeManager extends WebChromeClient {
     }
 
     @Override
-    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams){
         mainActivity.set_filePathCallbackLollipop(filePathCallback);
 
-//        Intent i = new Intent();
-//        i.addCategory(Intent.CATEGORY_OPENABLE);
-//        i.setType("*/*");
-//        i.setAction(Intent.ACTION_GET_CONTENT);
-//        i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-
-// Create file chooser intent
-
-//        Intent i = new Intent(Intent.ACTION_PICK);
-//        i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-//        i. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        Intent i;
+   /*     Intent i;
 
         if(webView.getUrl().contains("register_form.php"))
             i =new Intent(Intent.ACTION_PICK);
@@ -50,8 +43,26 @@ class ChromeManager extends WebChromeClient {
         i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         // Create file chooser intent
 
-        mainActivity.startActivityForResult(i, FILECHOOSER_LOLLIPOP_REQ_CODE);
+        mainActivity.startActivityForResult(i, FILECHOOSER_LOLLIPOP_REQ_CODE);*/
+
+        int maxnum=1;
+
+        if(webView.getUrl().contains("register_form.php"))
+            maxnum=1;
+        else
+            maxnum=10;
+
+        Matisse.from(mainActivity)
+                .choose(MimeType.ofAll())
+                .countable(true)
+                .maxSelectable(maxnum)
+                .imageEngine(new GlideEngine())
+                .showPreview(true) // Default is `true`
+                .countable(false)
+                .forResult(FILECHOOSER_LOLLIPOP_REQ_CODE);
+
         return true;
+
     }
 
     @Override

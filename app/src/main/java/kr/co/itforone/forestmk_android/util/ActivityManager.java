@@ -1,4 +1,4 @@
-package kr.co.itforone.forestmk_android;
+package kr.co.itforone.forestmk_android.util;
 
 import android.app.Activity;
 

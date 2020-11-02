@@ -23,7 +23,12 @@
             >
 
         </activity>
-        <activity android:name=".SubWebveiwActivity"
+        <activity android:name=".sub.SubWebveiwActivity"
+        android:screenOrientation="portrait"
+        >
+
+        </activity>
+        <activity android:name=".ShowDetailimg"
             android:screenOrientation="portrait"
             >
 

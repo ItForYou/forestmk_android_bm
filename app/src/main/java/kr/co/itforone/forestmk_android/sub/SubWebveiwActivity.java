@@ -1,26 +1,20 @@
-package kr.co.itforone.forestmk_android;
+package kr.co.itforone.forestmk_android.sub;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
@@ -33,25 +27,24 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.zhihu.matisse.Matisse;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kr.co.itforone.forestmk_android.util.ActivityManager;
+import kr.co.itforone.forestmk_android.util.BackHistoryManager;
+import kr.co.itforone.forestmk_android.util.EndDialog;
+import kr.co.itforone.forestmk_android.R;
 
 public class SubWebveiwActivity extends AppCompatActivity {
 
@@ -242,7 +235,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                 }
                 //Toast.makeText(getApplicationContext(),"get_addr", Toast.LENGTH_LONG).show();
                 break;
-            case ChromeManager.FILECHOOSER_LOLLIPOP_REQ_CODE:
+            case FILECHOOSER_LOLLIPOP_REQ_CODE:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                     if (resultCode == RESULT_OK && webView.getUrl().contains("register_form.php")){
                         if (data != null) {
@@ -449,7 +442,6 @@ public class SubWebveiwActivity extends AppCompatActivity {
             Log.d("history_NoRefresh!!", last);
             Norefresh();
 
-
         }
 
         else{
@@ -587,6 +579,23 @@ public class SubWebveiwActivity extends AppCompatActivity {
             negativeButton.setTextColor(Color.parseColor("#ff0000"));
 
         }
+        else if(webView.getUrl().contains("chatting.list.php")){
+
+            bm.removeAllHistory();
+          //  webView.clearCache(true);
+            webView.loadUrl(getString(R.string.home));
+
+        }
+
+        else if(webView.getUrl().contains("chatting.php")){
+
+            bm.removeAllHistory();
+         //   webView.clearCache(true);
+            webView.loadUrl("javascript:leavepage()");
+            //webView.loadUrl(getString(R.string.chattinglist));
+
+        }
+
 
         else if(now_his.size()>0){
 
@@ -615,39 +624,51 @@ public class SubWebveiwActivity extends AppCompatActivity {
                 else if(last.contains("write_update.php") ){
 
                     if(back2_url.contains("w=u")){
+
                         bm.removelast();
                         bm.removelast();
                         bm.removelast();
                         onBackPressed();
                         back2_url ="";
+
                     }
 
                     else{
+
                         bm.removelast();
                         onBackPressed();
+
                     }
 
                 }
                 else if(last.contains("write_comment_update.php")) {
                     if(back2_url.contains("w=cu")){
+
                         bm.removelast();
                         bm.removelast();
                         onBackPressed();
                         back2_url ="";
+
                     }
                     else{
+
                         bm.removelast();
                         onBackPressed();
+
                     }
                 }
                 else if( last.contains("delete.php") ){
+
                     bm.removelast();
                     bm.removelast();
                     onBackPressed();
+
                 }
                 else {
+
                     bm.removelast();
                     webView.loadUrl(last);
+
                 }
             }
         }

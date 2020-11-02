@@ -1,6 +1,4 @@
-package kr.co.itforone.forestmk_android;
-
-import android.app.Activity;
+package kr.co.itforone.forestmk_android.util;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package kr.co.itforone.forestmk_android;
+package kr.co.itforone.forestmk_android.sub;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,9 +6,11 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import kr.co.itforone.forestmk_android.R;
+import kr.co.itforone.forestmk_android.ShowDetailimg;
 
 class SubWebviewJavainterface {
 
@@ -95,21 +97,25 @@ class SubWebviewJavainterface {
 
     @JavascriptInterface
     public void setlogout() {
-       // Toast.makeText(activity.getApplicationContext(),"logout",Toast.LENGTH_LONG).show();
+
+        // Toast.makeText(activity.getApplicationContext(),"logout",Toast.LENGTH_LONG).show();
         SharedPreferences pref = activity.getSharedPreferences("logininfo", activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
         editor.commit();
+
     }
 
     @JavascriptInterface
     public void back_pressed() {
+
         Log.d("history_interfaceback!!","true");
         activity.webView.post(new Runnable() {
             public void run() {
                 activity.onBackPressed();
             }
         });
+
     }
 
     @JavascriptInterface
@@ -122,6 +128,15 @@ class SubWebviewJavainterface {
 
     }
 
+    @JavascriptInterface
+    public void detail_img(String src){
+
+        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
+        Intent i = new Intent(activity.getApplicationContext(), ShowDetailimg.class);
+        i.putExtra("src",src);
+        activity.startActivity(i);
+
+    }
 
     @JavascriptInterface
     public void show_confirm(String message, String state, String href){

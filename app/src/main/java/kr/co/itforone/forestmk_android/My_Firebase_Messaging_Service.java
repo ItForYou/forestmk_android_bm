@@ -47,7 +47,7 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
         Log.d("remote","Message:"+remoteMessage.getFrom());
 
 
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("goUrl",goUrl);
 

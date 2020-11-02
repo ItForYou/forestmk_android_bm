@@ -11,6 +11,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.annotation.RequiresApi;
 
+import kr.co.itforone.forestmk_android.sub.SubWebveiwActivity;
+import kr.co.itforone.forestmk_android.util.BackHistoryManager;
+
 class ViewManager extends WebViewClient{
 
     Activity context;
@@ -78,7 +81,9 @@ class ViewManager extends WebViewClient{
           //Toast.makeText(mainActivity.getApplicationContext(),"view"+String.valueOf(mainActivity.flg_alert), Toast.LENGTH_LONG).show();
           if(url.contains("register_form.php") || url.contains("password_lost.php") ||
                   (url.contains("board.php") && url.contains("wr_id=")) || url.contains("mypage.php") ||
-                  url.contains("login.php") || url.contains("mymap.php") || url.contains("img_view.php")){
+                  url.contains("login.php") || url.contains("mymap.php") || url.contains("img_view.php") ||
+                  url.contains("chatting.php")
+          ){
               mainActivity.Norefresh();
               mainActivity.flg_refresh=0;
           }

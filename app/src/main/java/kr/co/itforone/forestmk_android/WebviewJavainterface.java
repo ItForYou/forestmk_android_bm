@@ -8,9 +8,10 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import kr.co.itforone.forestmk_android.sub.SubWebveiwActivity;
 
 class WebviewJavainterface {
     Activity activity;
@@ -52,6 +53,16 @@ class WebviewJavainterface {
 
         //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
         mainActivity.alert(message);
+
+    }
+
+    @JavascriptInterface
+    public void detail_img(String src){
+
+        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
+        Intent i = new Intent(mainActivity.getApplicationContext(),ShowDetailimg.class);
+        i.putExtra("src",src);
+        mainActivity.startActivity(i);
 
     }
 

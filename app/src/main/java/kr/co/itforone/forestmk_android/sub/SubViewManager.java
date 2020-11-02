@@ -1,4 +1,4 @@
-package kr.co.itforone.forestmk_android;
+package kr.co.itforone.forestmk_android.sub;
 
 
 import android.content.Intent;
@@ -6,6 +6,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import kr.co.itforone.forestmk_android.util.BackHistoryManager;
+import kr.co.itforone.forestmk_android.MainActivity;
+import kr.co.itforone.forestmk_android.R;
 
 class SubViewManager extends WebViewClient {
     SubWebveiwActivity context;
@@ -45,7 +49,7 @@ class SubViewManager extends WebViewClient {
 
         if(url.contains("category.php") || url.contains("recent_list.php") || (url.contains("mypage.php") && !url.contains("compulsive"))
                 ||  (url.contains("board.php")&&!url.contains("wr_id") && !url.contains("compulsive") && !url.contains("flg_snackbar"))  || (url.contains("write.php") && url.contains("deal"))
-                ) {
+                ){
 
             Log.d("backpress_newintent",url);
 
@@ -72,7 +76,9 @@ class SubViewManager extends WebViewClient {
             //Toast.makeText(mainActivity.getApplicationContext(),"view"+String.valueOf(mainActivity.flg_alert), Toast.LENGTH_LONG).show();
             if(url.contains("register_form.php") || url.contains("password_lost.php") ||
                     (url.contains("board.php") && url.contains("wr_id=")) || url.contains("mypage.php") ||
-                    url.contains("login.php") || url.contains("mymap.php") || url.contains("myhp.php") || url.contains("img_view.php")){
+                    url.contains("login.php") || url.contains("mymap.php") || url.contains("myhp.php") || url.contains("img_view.php")||
+                    url.contains("chatting.php")
+            ){
                 context.Norefresh();
                 context.flg_refresh=0;
             }

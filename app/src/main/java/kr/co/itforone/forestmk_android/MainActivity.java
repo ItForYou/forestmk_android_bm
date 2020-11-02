@@ -46,6 +46,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kr.co.itforone.forestmk_android.util.ActivityManager;
+import kr.co.itforone.forestmk_android.util.BackHistoryManager;
+import kr.co.itforone.forestmk_android.util.EndDialog;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -183,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("pushurl", pushurl);
 
         if(!pushurl.isEmpty() && !pushurl.equals("")){
+
             if(!id.isEmpty() && !pwd.isEmpty()) {
                 Log.d("loadurl1", "true");
                 bm.addHitory(getString(R.string.login) + "mb_id=" + id + "&mb_password=" + pwd);
@@ -193,15 +197,14 @@ public class MainActivity extends AppCompatActivity {
                 bm.addHitory(getString(R.string.home));
                 webView.loadUrl(pushurl);
             }
+
         }
         else if(!id.isEmpty() && !pwd.isEmpty()){
-            Log.d("loadurl3", "true");
                 webView.loadUrl(getString(R.string.login) + "mb_id=" + id + "&mb_password=" + pwd);
          //   webView.clearCache(true);
          //   webView.clearHistory();
         }
         else {
-            Log.d("loadurl4", "true");
             webView.loadUrl(getString(R.string.home));
         }
 
@@ -334,6 +337,23 @@ public class MainActivity extends AppCompatActivity {
 
             bm.removeAllHistory();
 
+
+        }
+
+        else if(webView.getUrl().contains("chatting.list.php")){
+
+            bm.removeAllHistory();
+          //  webView.clearCache(true);
+            webView.loadUrl(getString(R.string.home));
+
+        }
+
+        else if(webView.getUrl().contains("chatting.php")){
+
+            bm.removeAllHistory();
+        //    webView.clearCache(true);
+            webView.loadUrl("javascript:leavepage()");
+          //  webView.loadUrl(getString(R.string.chattinglist));
 
         }
 

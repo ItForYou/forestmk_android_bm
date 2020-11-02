@@ -1,12 +1,9 @@
-package kr.co.itforone.forestmk_android;
+package kr.co.itforone.forestmk_android.sub;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -16,7 +13,8 @@ import android.widget.Button;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.filter.Filter;
+
+import kr.co.itforone.forestmk_android.MainActivity;
 
 class SubChromeManager extends WebChromeClient {
 
