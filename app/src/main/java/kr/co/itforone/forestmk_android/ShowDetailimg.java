@@ -2,12 +2,14 @@ package kr.co.itforone.forestmk_android;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.RectF;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -18,6 +20,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.OnMatrixChangedListener;
+import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
+import com.github.chrisbanes.photoview.OnScaleChangedListener;
+import com.github.chrisbanes.photoview.OnSingleFlingListener;
+import com.github.chrisbanes.photoview.OnViewDragListener;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +39,7 @@ import kr.co.itforone.forestmk_android.util.ActivityManager;
 public class ShowDetailimg extends AppCompatActivity {
     @BindView(R.id.detail_img)    ImageView detail_img;
     @BindView(R.id.bt_saveimg)    Button bt_saveimg;
-
+    PhotoViewAttacher mAttacher;
     private ActivityManager am = ActivityManager.getInstance();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,17 +49,22 @@ public class ShowDetailimg extends AppCompatActivity {
         am.addActivity(this);
         Intent i = getIntent();
         String src = "";
+
         if(i!=null){
             src = i.getStringExtra("src");
         }
+
         if(!src.isEmpty() && !src.equals("")) {
 
             Glide.with(this)
                     .load(src)
                     .into(detail_img);
 
-        }
+            mAttacher = new PhotoViewAttacher(detail_img);
+            mAttacher.setMinimumScale(1);
+            mAttacher.setScaleType(ImageView.ScaleType.FIT_XY);
 
+        }
     }
 
     public void saveimg(View view){
@@ -71,6 +85,7 @@ public class ShowDetailimg extends AppCompatActivity {
             else{
                 Log.d("bt_click","null!");
             }
+
         }
     }
 
@@ -87,7 +102,6 @@ public class ShowDetailimg extends AppCompatActivity {
     }
 
     private void saveImage(Bitmap image, String storageDir, String imageFileName){
-
 
         File imageFile = new File(storageDir, imageFileName);
         String savedImagePath = imageFile.getAbsolutePath();

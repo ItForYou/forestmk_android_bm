@@ -58,6 +58,7 @@ class SubWebviewJavainterface {
             gps_enabled = SubWebveiwActivity.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch(Exception ex) {}
         if(gps_enabled) {
+
             double lat = activity.getlat() * 1000000;
             double lng = activity.getlng() * 1000000;
             lat = Math.ceil(lat) / 1000000;
@@ -78,8 +79,8 @@ class SubWebviewJavainterface {
 
                 }
             });
-
         //    Toast.makeText(activity.getApplicationContext(), "" + lat + " , " + lng, Toast.LENGTH_LONG).show();
+
         }
         else{
             activity.settingModal();

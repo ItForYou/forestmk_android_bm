@@ -172,7 +172,6 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
         }
 
-
         subrefreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
@@ -199,12 +198,15 @@ public class SubWebveiwActivity extends AppCompatActivity {
             }
         });
 
-        if(url.contains("mypage.php") || url.contains("login.php")){
+        if(url.contains("mypage.php") || url.contains("login.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
+                !url.contains("wr_id="))
+        ){
 
             Norefresh();
             flg_refresh=0;
 
         }
+
         Log.d("sub_lastchk1",String.valueOf(now_refreshlayout));
         Log.d("sub_lastchk2",String.valueOf(before_refreshlayout));
    //     Toast.makeText(getApplicationContext(),now_refreshlayout.toString()+","+before_refreshlayout.toString().toString(),Toast.LENGTH_LONG).show();
@@ -437,7 +439,8 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
         if(last.contains("register_form.php") || last.contains("password_lost.php") ||
                 (last.contains("board.php") && last.contains("wr_id=")) || last.contains("mypage.php") ||
-                last.contains("login.php") || last.contains("mymap.php") ) {
+                last.contains("login.php") || last.contains("mymap.php") ||  last.contains("mysetting.php") || last.contains("chkservice.php") ||
+                (last.contains("board.php?bo_table=qna") && !last.contains("wr_id=")) ) {
 
             Log.d("history_NoRefresh!!", last);
             Norefresh();

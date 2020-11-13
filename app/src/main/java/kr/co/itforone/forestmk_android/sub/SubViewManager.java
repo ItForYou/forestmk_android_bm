@@ -77,13 +77,16 @@ class SubViewManager extends WebViewClient {
             if(url.contains("register_form.php") || url.contains("password_lost.php") ||
                     (url.contains("board.php") && url.contains("wr_id=")) || url.contains("mypage.php") ||
                     url.contains("login.php") || url.contains("mymap.php") || url.contains("myhp.php") || url.contains("img_view.php")||
-                    url.contains("chatting.php")
+                    url.contains("chatting.php") || url.contains("mysetting.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
+            !url.contains("wr_id="))
             ){
+                Log.d("history_refresh","no");
                 context.Norefresh();
                 context.flg_refresh=0;
             }
 
             else{
+                Log.d("history_refresh","yes");
                 context.Yesrefresh();
                 context.flg_refresh=1;
             }
@@ -108,6 +111,7 @@ class SubViewManager extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
+        view.loadUrl("javascript:setToken('"+mainActivity.token+"')");
         /*if(url.contains("login_check.php") || url.contains("write_update.php") || url.contains("register_form_update.php")){
             WebBackForwardList list = null;
             String backurl ="";

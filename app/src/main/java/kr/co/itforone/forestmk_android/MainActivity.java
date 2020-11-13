@@ -35,6 +35,8 @@ import android.webkit.WebBackForwardList;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.webView)    WebView webView;
     @BindView(R.id.refreshlayout)    SwipeRefreshLayout refreshlayout;
 
-    String token = "", pushurl="";
+    static public String token = "", pushurl="";
     public int flg_refresh = 1;
     ValueCallback<Uri[]> filePathCallbackLollipop;
     Dialog current_dialog;
@@ -152,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         // Get new Instance ID token
                         token = task.getResult().getToken();
+           //             Toast.makeText(getApplicationContext(), token, Toast.LENGTH_SHORT).show();
                     }
         });
 
@@ -255,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setSupportZoom(false);   //화면 확대축소
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
+
         try{
 
             list = webView.copyBackForwardList();
@@ -267,8 +271,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("history_webview", back2_url);
             }
 
-
-
         } catch (NullPointerException e) {
 
             e.printStackTrace();
@@ -277,7 +279,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(last.contains("register_form.php") || last.contains("password_lost.php") ||
                 (last.contains("board.php") && last.contains("wr_id=")) || last.contains("mypage.php") ||
-                last.contains("login.php") || last.contains("mymap.php") ) {
+                last.contains("login.php") || last.contains("mymap.php") || last.contains("mysetting.php") || last.contains("chkservice.php") || (last.contains("board.php?bo_table=qna") &&
+                !last.contains("wr_id="))) {
 
             Log.d("history_NoRefresh!!", backurl);
             Norefresh();
@@ -450,6 +453,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(Message);
         // Set the positive button
         builder.setPositiveButton("확인",   new DialogInterface.OnClickListener() {
+
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList <String> dialog_list = bm.getHistorylist();
                 String dialog_last = "";
@@ -477,10 +481,12 @@ public class MainActivity extends AppCompatActivity {
         });
         // Set the negative button
         builder.setNegativeButton("취소",  new DialogInterface.OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
+
         });
 
         builder.setCancelable(false);
