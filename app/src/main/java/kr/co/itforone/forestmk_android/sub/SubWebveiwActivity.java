@@ -199,7 +199,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
         });
 
         if(url.contains("mypage.php") || url.contains("login.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
-                !url.contains("wr_id="))
+                !url.contains("wr_id=")) || url.contains("category.php")
         ){
 
             Norefresh();
@@ -405,6 +405,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
         Log.d("history_back_init", "init!");
         ArrayList<String> now_his = bm.getHistorylist();
         Log.d("history_back", now_his.toString());
@@ -440,7 +441,8 @@ public class SubWebveiwActivity extends AppCompatActivity {
         if(last.contains("register_form.php") || last.contains("password_lost.php") ||
                 (last.contains("board.php") && last.contains("wr_id=")) || last.contains("mypage.php") ||
                 last.contains("login.php") || last.contains("mymap.php") ||  last.contains("mysetting.php") || last.contains("chkservice.php") ||
-                (last.contains("board.php?bo_table=qna") && !last.contains("wr_id=")) ) {
+                (last.contains("board.php?bo_table=qna") && !last.contains("wr_id="))
+        ) {
 
             Log.d("history_NoRefresh!!", last);
             Norefresh();
