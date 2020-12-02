@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private EndDialog mEndDialog;
     WebSettings settings;
     boolean gps_enabled = false, now_refreshlayout=true;
+    String user_id, user_pwd;
     int flg_alert = 0, flg_confirm=0, flg_modal=0,flg_sortmodal=0, flg_dclmodal=0, flg_dclcommmodal=0;
     long backPrssedTime =0;
 
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FirebaseInstanceId.getInstance().getInstanceId()
+
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
@@ -177,10 +179,10 @@ public class MainActivity extends AppCompatActivity {
        // webView.setLongClickable(true);
 
         SharedPreferences pref = getSharedPreferences("logininfo", MODE_PRIVATE);
-        String id = pref.getString("id", "");
-        String pwd = pref.getString("pwd", "");
+        user_id = pref.getString("id", "");
+        user_pwd = pref.getString("pwd", "");
 
-       // Toast.makeText(getApplicationContext(),id+"-"+pwd,Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),id+"-"+pwd,Toast.LENGTH_LONG).show();
         Intent push = getIntent();
 
         if (push.getStringExtra("goUrl") != null)
@@ -190,20 +192,25 @@ public class MainActivity extends AppCompatActivity {
 
         if(!pushurl.isEmpty() && !pushurl.equals("")){
 
-            if(!id.isEmpty() && !pwd.isEmpty()) {
-                Log.d("loadurl1", "true");
-                bm.addHitory(getString(R.string.login) + "mb_id=" + id + "&mb_password=" + pwd);
-                webView.loadUrl(pushurl);
+            if(!user_id.isEmpty() && !user_pwd.isEmpty()){
+
+                Log.d("history_loadurl1", "true");
+
+            //    bm.addHitory(getString(R.string.home));
+                webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&android_push=1");
+                pushurl="";
+
             }
             else{
-                Log.d("loadurl2", "true");
+                Log.d("history_loadurl2", "true");
                 bm.addHitory(getString(R.string.home));
                 webView.loadUrl(pushurl);
+                pushurl="";
             }
 
         }
-        else if(!id.isEmpty() && !pwd.isEmpty()){
-                webView.loadUrl(getString(R.string.login) + "mb_id=" + id + "&mb_password=" + pwd);
+        else if(!user_id.isEmpty() && !user_pwd.isEmpty()){
+                webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd);
          //   webView.clearCache(true);
          //   webView.clearHistory();
         }

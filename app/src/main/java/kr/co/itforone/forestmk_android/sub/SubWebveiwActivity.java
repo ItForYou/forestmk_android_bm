@@ -149,12 +149,19 @@ public class SubWebveiwActivity extends AppCompatActivity {
         }
 
         //webView.setLongClickable(true);
-        String url="";
+        String url="",login_user_id="",login_user_pwd="";
+        boolean pushurl_login = false;
         Intent intent = getIntent();
 
         if(intent!=null) {
 
             url = intent.getExtras().getString("subview_url");
+            /*pushurl_login = intent.getExtras().getBoolean("push_login",false);
+            Log.d("pushlogin",String.valueOf(pushurl_login));
+            if(pushurl_login){
+                login_user_id = intent.getExtras().getString("userid");
+                login_user_pwd = intent.getExtras().getString("userpwd");
+            }*/
             before_refreshlayout = intent.getExtras().getBoolean("before_refresh");
 
         }
@@ -166,7 +173,12 @@ public class SubWebveiwActivity extends AppCompatActivity {
             else{
                 Yesrefresh();
             }
-            webView.loadUrl(url);
+/*
+            if(pushurl_login)
+                webView.loadUrl(getString(R.string.login) + "mb_id=" + login_user_id + "&mb_password=" + login_user_pwd);*/
+
+                webView.loadUrl(url);
+
         }
         else{
 
@@ -605,11 +617,12 @@ public class SubWebveiwActivity extends AppCompatActivity {
         else if(now_his.size()>0){
 
 
-            Log.d("history_back_last", last);
+            Log.d("history_back_last2", last);
 
             if(last.equals("intent")) {
 
                 bm.removelast();
+                Log.d("history_back_last22", bm.getHistorylist().toString());
                 Intent intent = new Intent();
                 intent.putExtra("refresh",true);
                 setResult(RESULT_OK,intent);
