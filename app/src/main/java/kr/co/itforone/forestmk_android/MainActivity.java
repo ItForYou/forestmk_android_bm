@@ -52,6 +52,18 @@ import kr.co.itforone.forestmk_android.util.ActivityManager;
 import kr.co.itforone.forestmk_android.util.BackHistoryManager;
 import kr.co.itforone.forestmk_android.util.EndDialog;
 
+/*
+
+       13.공지사항 푸쉬누를시 나의메뉴로 가지긴 가지는데 로그인이 풀려있음 새로고침이 생김(진행)
+       6.쪽지함 푸쉬누르면 로그인이 풀려있음(진행)
+       7.푸쉬경로로 들어가면 나의메뉴에서 새로고침이 생김(진행)
+
+       인텐트 무한루프 -> why?
+
+
+
+
+*/
 
 public class MainActivity extends AppCompatActivity {
 
@@ -196,14 +208,17 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("history_loadurl1", "true");
 
-            //    bm.addHitory(getString(R.string.home));
+                if(bm.getHistorylist().size()<=0)
+                    bm.addHitory(getString(R.string.home));
+
                 webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&android_push=1");
                 pushurl="";
 
             }
             else{
                 Log.d("history_loadurl2", "true");
-                bm.addHitory(getString(R.string.home));
+                if(bm.getHistorylist().size()<=0)
+                    bm.addHitory(getString(R.string.home));
                 webView.loadUrl(pushurl);
                 pushurl="";
             }
@@ -699,11 +714,30 @@ public class MainActivity extends AppCompatActivity {
                             if(data!=null){
 
                                 boolean backflg_refresh = data.getExtras().getBoolean("refresh");
-                                Log.d("backpress_flg",String.valueOf(backflg_refresh));
-                                if(backflg_refresh==true) {
+
+
+                                if(webView.getOriginalUrl().contains("android_push=1")){
+
+                                        String last_now="";
+                                        if(bm.getHistorylist().size()>0)
+                                            last_now = bm.getHistorylist().get(bm.getHistorylist().size() - 1);
+                                        Log.d("history_refresh_last", bm.getHistorylist().toString());
+                                        if (!last_now.isEmpty() && last_now.equals("intent")) {
+                                            bm.removeAllHistory();
+                                            //bm.addHitory(getString(R.string.home));
+                                            webView.loadUrl(getString(R.string.home));
+                                        } else {
+                                            webView.loadUrl(last_now);
+                                            //onBackPressed();
+                                        }
+                                    //onBackPressed();
+                                }
+                                else if(backflg_refresh==true) {
                                     webView.reload();
                                 }
+
                                 break;
+
                             }
                             else{
                                 break;

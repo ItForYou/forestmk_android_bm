@@ -19,9 +19,7 @@ class ViewManager extends WebViewClient{
     Activity context;
     MainActivity mainActivity;
     private BackHistoryManager bm = BackHistoryManager.getInstance();
-// 28 29
-//
-// 1
+
     public ViewManager(Activity context, MainActivity mainActivity) {
         this.context = context;
         this.mainActivity = mainActivity;

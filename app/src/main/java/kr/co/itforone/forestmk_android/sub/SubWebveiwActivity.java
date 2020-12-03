@@ -211,7 +211,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
         });
 
         if(url.contains("mypage.php") || url.contains("login.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
-                !url.contains("wr_id=")) || url.contains("category.php")
+                !url.contains("wr_id=")) || url.contains("category.php") || url.contains("android_push")
         ){
 
             Norefresh();
@@ -626,6 +626,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("refresh",true);
                 setResult(RESULT_OK,intent);
+                Log.d("history_back_last22", "finish");
                 finish();
                 overridePendingTransition(R.anim.stay, R.anim.fadeout);
 
