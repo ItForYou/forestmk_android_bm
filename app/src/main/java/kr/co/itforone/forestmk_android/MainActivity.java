@@ -15,12 +15,14 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +53,7 @@ import butterknife.ButterKnife;
 import kr.co.itforone.forestmk_android.util.ActivityManager;
 import kr.co.itforone.forestmk_android.util.BackHistoryManager;
 import kr.co.itforone.forestmk_android.util.EndDialog;
+import kr.co.itforone.forestmk_android.util.NetworkReceiver;
 
 /*
 
@@ -59,9 +62,6 @@ import kr.co.itforone.forestmk_android.util.EndDialog;
        7.푸쉬경로로 들어가면 나의메뉴에서 새로고침이 생김(진행)
 
        인텐트 무한루프 -> why?
-
-
-
 
 */
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     String user_id, user_pwd;
     int flg_alert = 0, flg_confirm=0, flg_modal=0,flg_sortmodal=0, flg_dclmodal=0, flg_dclcommmodal=0;
     long backPrssedTime =0;
-
+    private NetworkReceiver receiver;
     String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -147,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         am.addActivity(this);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReceiver();
+        this.registerReceiver(receiver, filter);
 
         ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
 
@@ -157,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        FirebaseInstanceId.getInstance().getInstanceId()
-
+        FirebaseInstanceId.getInstance()
+                .getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {

@@ -7,11 +7,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +47,7 @@ import kr.co.itforone.forestmk_android.util.ActivityManager;
 import kr.co.itforone.forestmk_android.util.BackHistoryManager;
 import kr.co.itforone.forestmk_android.util.EndDialog;
 import kr.co.itforone.forestmk_android.R;
+import kr.co.itforone.forestmk_android.util.NetworkReceiver;
 
 public class SubWebveiwActivity extends AppCompatActivity {
 
@@ -81,7 +84,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
     };
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
-
+    private NetworkReceiver receiver;
     private boolean hasPermissions(String[] permissions){
         // 퍼미션 확인
         int result = -1;
@@ -127,6 +130,11 @@ public class SubWebveiwActivity extends AppCompatActivity {
         setContentView(R.layout.activity_webview);
         ButterKnife.bind(this);
         am.addActivity(this);
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReceiver();
+        this.registerReceiver(receiver, filter);
+
         settings = webView.getSettings();
         webView.setWebChromeClient(new SubChromeManager(this));
         webView.setWebViewClient(new SubViewManager(this));
@@ -211,7 +219,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
         });
 
         if(url.contains("mypage.php") || url.contains("login.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
-                !url.contains("wr_id=")) || url.contains("category.php") || url.contains("android_push")
+                !url.contains("wr_id=")) || url.contains("category.php") || url.contains("android_push") || url.contains("notice")
         ){
 
             Norefresh();

@@ -19,17 +19,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.net.NetworkInterface;
 
+import kr.co.itforone.forestmk_android.util.ActivityManager;
+
 public class SplashActivity extends AppCompatActivity {
 
     private final int SPLASH_DISPLAY_LENGTH = 2000;
     String pushurl="";
     boolean isWifiConn = false;
     boolean isMobileConn = false;
+    private ActivityManager am = ActivityManager.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        am.addActivity(this);
 
         Intent push = getIntent();
 
@@ -105,11 +109,11 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                finish();
+                am.finishAllActivity();
             }
         });
 
-        builder.setCancelable(true);
+        builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         //  mainActivity.current_dialog = dialog;
         dialog.show();
