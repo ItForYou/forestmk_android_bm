@@ -9,6 +9,7 @@ import android.webkit.JavascriptInterface;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import kr.co.itforone.forestmk_android.MainActivity;
 import kr.co.itforone.forestmk_android.R;
 import kr.co.itforone.forestmk_android.ShowDetailimg;
 
@@ -40,6 +41,14 @@ class SubWebviewJavainterface {
         intent.putExtra("address11",addr11);
         activity.setResult(33,intent);
         activity.finish();
+
+    }
+
+    @JavascriptInterface
+    public void set_flgsave(int flg_save){
+
+        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
+        MainActivity.flg_save = flg_save;
 
     }
 

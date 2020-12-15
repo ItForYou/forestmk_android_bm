@@ -24,6 +24,9 @@ public class ActivityManager {
     public ArrayList<Activity> getActivityList() {
         return activityList;
     }
+    public Activity getActivityLast() {
+            return activityList.get(activityList.size()-1);
+    }
 
     public void addActivity(Activity activity) {
         activityList.add(activity);

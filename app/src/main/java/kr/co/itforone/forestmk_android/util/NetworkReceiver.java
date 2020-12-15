@@ -61,7 +61,7 @@ public class NetworkReceiver extends BroadcastReceiver {
             Intent intent_splash  = new Intent(context, SplashActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent_splash);
-          // am.finishAllActivity();
+            am.finishAllActivity();
 
         }
     }

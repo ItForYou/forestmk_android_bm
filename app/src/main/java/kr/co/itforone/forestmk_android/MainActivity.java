@@ -55,15 +55,7 @@ import kr.co.itforone.forestmk_android.util.BackHistoryManager;
 import kr.co.itforone.forestmk_android.util.EndDialog;
 import kr.co.itforone.forestmk_android.util.NetworkReceiver;
 
-/*
 
-       13.공지사항 푸쉬누를시 나의메뉴로 가지긴 가지는데 로그인이 풀려있음 새로고침이 생김(진행)
-       6.쪽지함 푸쉬누르면 로그인이 풀려있음(진행)
-       7.푸쉬경로로 들어가면 나의메뉴에서 새로고침이 생김(진행)
-
-       인텐트 무한루프 -> why?
-
-*/
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.refreshlayout)    SwipeRefreshLayout refreshlayout;
 
     static public String token = "", pushurl="";
+    
     public int flg_refresh = 1;
     ValueCallback<Uri[]> filePathCallbackLollipop;
     Dialog current_dialog;
@@ -83,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     static final int CROP_FROM_ALBUM =2;
     static final int GET_ADDRESS =3;
     static final int VIEW_REFRESH =4;
+    public static int flg_save =1;
     private LocationManager locationManager;
     private EndDialog mEndDialog;
     WebSettings settings;
@@ -101,10 +95,13 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
 
     private boolean hasPermissions(String[] permissions){
-        // 퍼미션 확인
+        // 퍼미션 확인해
         int result = -1;
         for (int i = 0; i < permissions.length; i++) {
             result = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[i]);
+            if(result!=PackageManager.PERMISSION_GRANTED){
+                return false;
+            }
         }
         Log.d("per_result",String.valueOf(result));
         if (result == PackageManager.PERMISSION_GRANTED) {
@@ -151,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         receiver = new NetworkReceiver();
         this.registerReceiver(receiver, filter);
 
-        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
+       ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
 
         if(hasPermissions(PERMISSIONS)) {
 
@@ -159,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         }
+
 
         FirebaseInstanceId.getInstance()
                 .getInstanceId()
@@ -196,6 +194,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("logininfo", MODE_PRIVATE);
         user_id = pref.getString("id", "");
         user_pwd = pref.getString("pwd", "");
+
+        SharedPreferences pref2 = getSharedPreferences("flg_save", MODE_PRIVATE);
+        flg_save = pref.getInt("value", 1);
+
 
         //Toast.makeText(getApplicationContext(),id+"-"+pwd,Toast.LENGTH_LONG).show();
         Intent push = getIntent();
@@ -345,7 +347,6 @@ public class MainActivity extends AppCompatActivity {
             Norefresh();
 
         }
-
 
         else if(webView.getUrl().equals(getString(R.string.home)) || webView.getUrl().equals(getString(R.string.home2))
                 || webView.getUrl().contains("flg_snackbar=") ){

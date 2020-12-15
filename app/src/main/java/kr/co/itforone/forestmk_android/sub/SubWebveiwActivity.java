@@ -624,24 +624,26 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
         else if(now_his.size()>0){
 
-
-            Log.d("history_back_last2", last);
-
             if(last.equals("intent")) {
 
+                if(bm.getHistorylist().size()>=2 && bm.getHistorylist().get(bm.getHistorylist().size()-2).contains("write_update.php")){
+                    Log.d("test_back1","fileter1");
+                    bm.removelast();
+                    onBackPressed();
+                    return;
+                }
                 bm.removelast();
-                Log.d("history_back_last22", bm.getHistorylist().toString());
+                Log.d("test_back1",back2_url);
                 Intent intent = new Intent();
                 intent.putExtra("refresh",true);
                 setResult(RESULT_OK,intent);
-                Log.d("history_back_last22", "finish");
                 finish();
                 overridePendingTransition(R.anim.stay, R.anim.fadeout);
 
             }
 
             else{
-                if(last.contains("login_check.php") || last.contains("register_form_update.php") || last.contains("delete_comment.php")
+                if(last.contains("login_check.php") || last.contains("register_form_update.php") || last.contains("delete_comment.php") || last.contains("mypage.php")
                 ){
 
                     bm.removelast();
@@ -684,6 +686,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
                     }
                 }
+
                 else if( last.contains("delete.php") ){
 
                     bm.removelast();

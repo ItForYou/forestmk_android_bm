@@ -57,6 +57,14 @@ class WebviewJavainterface {
     }
 
     @JavascriptInterface
+    public void set_flgsave(int flg_save){
+
+        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
+        mainActivity.flg_save = flg_save;
+
+    }
+
+    @JavascriptInterface
     public void detail_img(String src){
 
         //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
