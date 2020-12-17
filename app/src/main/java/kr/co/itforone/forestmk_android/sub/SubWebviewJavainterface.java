@@ -12,6 +12,9 @@ import com.google.android.material.snackbar.Snackbar;
 import kr.co.itforone.forestmk_android.MainActivity;
 import kr.co.itforone.forestmk_android.R;
 import kr.co.itforone.forestmk_android.ShowDetailimg;
+import kr.co.itforone.forestmk_android.imageswiper.ImagedtActivity;
+
+import static android.content.Context.MODE_PRIVATE;
 
 class SubWebviewJavainterface {
 
@@ -41,14 +44,6 @@ class SubWebviewJavainterface {
         intent.putExtra("address11",addr11);
         activity.setResult(33,intent);
         activity.finish();
-
-    }
-
-    @JavascriptInterface
-    public void set_flgsave(int flg_save){
-
-        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
-        MainActivity.flg_save = flg_save;
 
     }
 
@@ -139,6 +134,16 @@ class SubWebviewJavainterface {
     }
 
     @JavascriptInterface
+    public void show_detail(String wrid){
+
+
+        Intent test_retro = new Intent(activity, ImagedtActivity.class);
+        test_retro.putExtra("wr_id",wrid);
+        activity.startActivity(test_retro);
+
+    }
+
+    @JavascriptInterface
     public void detail_img(String src){
 
         //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
@@ -184,6 +189,38 @@ class SubWebviewJavainterface {
     public void setflgmodal4(int i) {
         Log.d("backpress_","modal4");
         activity.flg_dclcommmodal=i;
+    }
+
+    @JavascriptInterface
+    public void set_flgsave(int flg_save){
+
+        SharedPreferences pref = activity.getSharedPreferences("save_flg", activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt("value",flg_save);
+        editor.commit();
+
+    }
+
+    @JavascriptInterface
+    public void opensearch(){
+        SharedPreferences pref = activity.getSharedPreferences("save_flg", MODE_PRIVATE);
+        int value  = pref.getInt("value", 1);
+
+
+        activity.webView.post(new Runnable() {
+            @Override
+            public void run() {
+                if(value ==1) {
+                    activity.webView.loadUrl("javascript:sch_saveactive();");
+                }
+                else{
+                    activity.webView.loadUrl("javascript:sch_saveinactive();");
+                }
+
+            }
+        });
+
+
     }
 
    /* @JavascriptInterface

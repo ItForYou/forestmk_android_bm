@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="kr.co.itforone.forestmk_android">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,21 +19,23 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"
             >
-
         </activity>
+
         <activity android:name=".sub.SubWebveiwActivity"
         android:screenOrientation="portrait"
         >
 
         </activity>
-        <activity android:name=".ShowDetailimg"
+        <activity android:name=".imageswiper.ImagedtActivity"
             android:screenOrientation="portrait"
             >
 
         </activity>
+
         <activity android:name=".SplashActivity"
             android:screenOrientation="portrait"
             >

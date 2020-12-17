@@ -37,7 +37,6 @@ import android.webkit.WebBackForwardList;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -50,6 +49,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kr.co.itforone.forestmk_android.imageswiper.ImagedtActivity;
 import kr.co.itforone.forestmk_android.util.ActivityManager;
 import kr.co.itforone.forestmk_android.util.BackHistoryManager;
 import kr.co.itforone.forestmk_android.util.EndDialog;
@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
     static final int CROP_FROM_ALBUM =2;
     static final int GET_ADDRESS =3;
     static final int VIEW_REFRESH =4;
-    public static int flg_save =1;
     private LocationManager locationManager;
     private EndDialog mEndDialog;
     WebSettings settings;
@@ -144,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         am.addActivity(this);
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        IntentFilter filter = new IntentFilter
+                (ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkReceiver();
         this.registerReceiver(receiver, filter);
 
@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         settings = webView.getSettings();
         webView.setWebChromeClient(new ChromeManager(this,this));
         webView.setWebViewClient(new ViewManager(this, this));
@@ -194,10 +195,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("logininfo", MODE_PRIVATE);
         user_id = pref.getString("id", "");
         user_pwd = pref.getString("pwd", "");
-
-        SharedPreferences pref2 = getSharedPreferences("flg_save", MODE_PRIVATE);
-        flg_save = pref.getInt("value", 1);
-
 
         //Toast.makeText(getApplicationContext(),id+"-"+pwd,Toast.LENGTH_LONG).show();
         Intent push = getIntent();
@@ -266,6 +263,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Log.d("lastchk",String.valueOf(now_refreshlayout));
+
+
+
     }
 
     @Override

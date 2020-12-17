@@ -11,7 +11,10 @@ import android.webkit.JavascriptInterface;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import kr.co.itforone.forestmk_android.imageswiper.ImagedtActivity;
 import kr.co.itforone.forestmk_android.sub.SubWebveiwActivity;
+
+import static android.content.Context.MODE_PRIVATE;
 
 class WebviewJavainterface {
     Activity activity;
@@ -32,11 +35,21 @@ class WebviewJavainterface {
         mainActivity.startActivity(intent);
 
     }
+
     @JavascriptInterface
     public void show_snackbar(String message){
 
        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
         Snackbar.make(mainActivity.findViewById(R.id.refreshlayout), message,Snackbar.LENGTH_LONG).show();
+
+    }
+    @JavascriptInterface
+    public void show_detail(String wrid){
+
+
+        Intent test_retro = new Intent(mainActivity, ImagedtActivity.class);
+        test_retro.putExtra("wr_id",wrid);
+        mainActivity.startActivity(test_retro);
 
     }
 
@@ -59,10 +72,33 @@ class WebviewJavainterface {
     @JavascriptInterface
     public void set_flgsave(int flg_save){
 
-        //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
-        mainActivity.flg_save = flg_save;
+        SharedPreferences pref = mainActivity.getSharedPreferences("save_flg", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt("value",flg_save);
+        editor.commit();
 
     }
+
+    @JavascriptInterface
+    public void opensearch(){
+
+        SharedPreferences pref = mainActivity.getSharedPreferences("save_flg", MODE_PRIVATE);
+        int value  = pref.getInt("value", 1);
+
+
+            mainActivity.webView.post(new Runnable() {
+                @Override
+                public void run() {
+                        if(value ==1) {
+                            mainActivity.webView.loadUrl("javascript:sch_saveactive();");
+                        }
+                        else{
+                            mainActivity.webView.loadUrl("javascript:sch_saveinactive();");
+                        }
+
+                }
+            });
+        }
 
     @JavascriptInterface
     public void detail_img(String src){
@@ -95,7 +131,7 @@ class WebviewJavainterface {
 
     @JavascriptInterface
     public void setLogininfo(String id,String password) {
-        SharedPreferences pref = mainActivity.getSharedPreferences("logininfo", mainActivity.MODE_PRIVATE);
+        SharedPreferences pref = mainActivity.getSharedPreferences("logininfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("id",id);
         editor.putString("pwd",password);
@@ -105,7 +141,7 @@ class WebviewJavainterface {
     @JavascriptInterface
     public void setlogout() {
      //   Toast.makeText(mainActivity.getApplicationContext(),"logout",Toast.LENGTH_LONG).show();
-        SharedPreferences pref = mainActivity.getSharedPreferences("logininfo", mainActivity.MODE_PRIVATE);
+        SharedPreferences pref = mainActivity.getSharedPreferences("logininfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
         editor.commit();
