@@ -365,8 +365,6 @@ public class MainActivity extends AppCompatActivity {
             window.setLayout(x,y);
 
             bm.removeAllHistory();
-
-
         }
 
         else if(webView.getUrl().contains("chatting.list.php")){
@@ -426,7 +424,6 @@ public class MainActivity extends AppCompatActivity {
                     bm.removelast();
                     webView.loadUrl(last);
                 }
-
             }
         }
 

@@ -28,6 +28,7 @@ import android.webkit.WebBackForwardList;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -220,6 +221,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
         if(url.contains("mypage.php") || url.contains("login.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
                 !url.contains("wr_id=")) || url.contains("category.php") || url.contains("android_push") || url.contains("notice")
+                || (url.contains("board.php?bo_table=deal") && url.contains("wr_id="))
         ){
 
             Norefresh();
@@ -565,8 +567,10 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
                     }
                     else{
+
                         bm.removelast();
                         webView.loadUrl(dialog_last);
+
                     }
 
                  /*   if(webView.canGoBack()){
@@ -643,6 +647,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
             }
 
             else{
+
                 if(last.contains("login_check.php") || last.contains("register_form_update.php") || last.contains("delete_comment.php") || last.contains("mypage.php")
                 ){
 
@@ -668,7 +673,6 @@ public class SubWebveiwActivity extends AppCompatActivity {
                         onBackPressed();
 
                     }
-
                 }
                 else if(last.contains("write_comment_update.php")) {
                     if(back2_url.contains("w=cu")){
@@ -695,9 +699,19 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
                 }
                 else {
-
                     bm.removelast();
-                    webView.loadUrl(last);
+                    if(last.contains("board.php") && !last.contains("wr_id=")) {
+                        if(webView.canGoBack()){
+                            webView.goBack();
+                        }
+                        else{
+
+                            finish();
+                        }
+                    }
+                    else {
+                        webView.loadUrl(last);
+                    }
 
                 }
             }

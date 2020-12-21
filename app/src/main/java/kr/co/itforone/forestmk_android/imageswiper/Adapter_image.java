@@ -4,14 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
-
 import kr.co.itforone.forestmk_android.R;
 
 public class Adapter_image extends RecyclerView.Adapter<ViewHolderPage>{
@@ -22,7 +18,6 @@ public class Adapter_image extends RecyclerView.Adapter<ViewHolderPage>{
     Adapter_image(ArrayList<ListSrc> data) {
         this.listdata = data;
     }
-
 
     @NonNull
     @Override

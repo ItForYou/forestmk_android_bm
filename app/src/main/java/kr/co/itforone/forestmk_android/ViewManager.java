@@ -48,7 +48,7 @@ class ViewManager extends WebViewClient{
         }
 
             if (url.contains("category.php") || url.contains("recent_list.php") || (url.contains("mypage.php") && !url.contains("compulsive"))
-                    || (url.contains("board.php") && !url.contains("wr_id") && !url.contains("compulsive") && !url.contains("flg_snackbar"))
+                    || (url.contains("board.php") && !url.contains("wr_id=") && !url.contains("compulsive") && !url.contains("flg_snackbar"))
                     || (url.contains("write.php") && url.contains("deal")) || url.contains("mysetting.php") || (url.contains("board.php?bo_table=qna") &&
                     !url.contains("wr_id="))
             ) {

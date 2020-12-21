@@ -75,7 +75,7 @@ class SubViewManager extends WebViewClient {
         else {
             //Toast.makeText(mainActivity.getApplicationContext(),"view"+String.valueOf(mainActivity.flg_alert), Toast.LENGTH_LONG).show();
             if(url.contains("register_form.php") || url.contains("password_lost.php") ||
-                    (url.contains("board.php") && url.contains("wr_id=")) || url.contains("mypage.php") ||
+                    (url.contains("board.php") && !url.contains("wr_id=")) || url.contains("mypage.php") ||
                     url.contains("login.php") || url.contains("mymap.php") || url.contains("myhp.php") || url.contains("img_view.php")||
                     url.contains("chatting.php") || url.contains("mysetting.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
             !url.contains("wr_id="))

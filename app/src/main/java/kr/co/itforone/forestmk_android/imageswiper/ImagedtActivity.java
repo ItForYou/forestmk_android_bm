@@ -4,14 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.co.itforone.forestmk_android.R;
@@ -20,8 +16,7 @@ import kr.co.itforone.forestmk_android.imageswiper.retrofit.RetrofitService;
 import kr.co.itforone.forestmk_android.imageswiper.retrofit.itemModel;
 import kr.co.itforone.forestmk_android.util.ActivityManager;
 import me.relex.circleindicator.CircleIndicator3;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -90,8 +85,6 @@ public class ImagedtActivity extends AppCompatActivity {
                     finish();
                 }
             });
-
-
         }
     }
 
