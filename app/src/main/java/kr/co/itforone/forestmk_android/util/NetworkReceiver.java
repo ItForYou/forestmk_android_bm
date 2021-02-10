@@ -1,5 +1,6 @@
 package kr.co.itforone.forestmk_android.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,9 +22,16 @@ import kr.co.itforone.forestmk_android.SplashActivity;
 public class NetworkReceiver extends BroadcastReceiver {
     boolean isWifiConn = false;
     boolean isMobileConn = false;
+    public int flg_networkchk = 0;
     private ActivityManager am = ActivityManager.getInstance();
+
+    public void setFlg_networkchk(int flg_networkchk) {
+        this.flg_networkchk = flg_networkchk;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
+
         isWifiConn = false;
         isMobileConn = false;
 
@@ -56,12 +64,16 @@ public class NetworkReceiver extends BroadcastReceiver {
             }
         }
 
-        if (isMobileConn == false && isWifiConn == false) {
+        if (isMobileConn == false && isWifiConn == false && flg_networkchk==0) {
 
-            Intent intent_splash  = new Intent(context, SplashActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent_splash);
-            am.finishAllActivity();
+                Log.d("receiver_log","on");
+
+
+                Intent intent_splash = new Intent(context, SplashActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent_splash);
+                Log.d("list_am", "receiver");
+
 
         }
     }

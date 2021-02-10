@@ -54,11 +54,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <receiver android:name=".util.NetworkReceiver">
+     <!--   <receiver android:name=".util.NetworkReceiver">
             <intent-filter >
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
-        </receiver>
+        </receiver>-->
     </application>
 
 </manifest>

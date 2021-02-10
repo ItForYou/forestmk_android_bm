@@ -87,6 +87,9 @@ class ViewManager extends WebViewClient{
                         url.contains("login.php") || url.contains("mymap.php") || url.contains("img_view.php") ||
                         url.contains("chatting.php")
                 ) {
+
+                    Log.d("comment_update","Norefresh");
+
                     mainActivity.Norefresh();
                     mainActivity.flg_refresh = 0;
                 } else {

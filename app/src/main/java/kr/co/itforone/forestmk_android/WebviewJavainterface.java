@@ -168,6 +168,11 @@ class WebviewJavainterface {
     }
 
     @JavascriptInterface
+    public void setflgmodal5(int i) {
+        mainActivity.flg_blockmodal=i;
+    }
+
+    @JavascriptInterface
     public void getlocation() {
         boolean gps_enabled = false;
         try {

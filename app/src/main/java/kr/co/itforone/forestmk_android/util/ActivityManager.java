@@ -36,6 +36,12 @@ public class ActivityManager {
         return activityList.remove(activity);
     }
 
+/*    public void clearManager(){
+
+        activityList.clear();
+
+    }*/
+
     public void finishAllActivity() {
         for (Activity activity : activityList) {
 
@@ -43,4 +49,5 @@ public class ActivityManager {
 
         }
     }
+
 }

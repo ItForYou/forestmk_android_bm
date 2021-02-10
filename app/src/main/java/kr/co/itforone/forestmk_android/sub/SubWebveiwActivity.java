@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,12 +53,14 @@ import kr.co.itforone.forestmk_android.util.EndDialog;
 import kr.co.itforone.forestmk_android.R;
 import kr.co.itforone.forestmk_android.util.NetworkReceiver;
 
+import static kr.co.itforone.forestmk_android.SplashActivity.receiver;
+
 public class SubWebveiwActivity extends AppCompatActivity {
 
     @BindView(R.id.sub_refreshlayout)   SwipeRefreshLayout subrefreshlayout;
     //@BindView(R.id.refreshlayout)   SwipeRefreshLayout refreshlayout;
     @BindView(R.id.subWebview)    public WebView webView;
-    int flg_alert =0,flg_confirm=0,flg_modal =0,flg_sortmodal=0,flg_dclmodal=0,flg_dclcommmodal=0;
+    int flg_alert =0,flg_confirm=0,flg_modal =0,flg_sortmodal=0,flg_dclmodal=0,flg_dclcommmodal=0,flg_blockmodal=0;
     public int flg_refresh = 1;
     private ActivityManager am = ActivityManager.getInstance();
     private BackHistoryManager bm = BackHistoryManager.getInstance();
@@ -63,19 +68,20 @@ public class SubWebveiwActivity extends AppCompatActivity {
     ValueCallback<Uri[]> filePathCallbackLollipop;
     static final int FILECHOOSER_LOLLIPOP_REQ_CODE=1300;
     static final int PERMISSION_REQUEST_CODE = 1;
-
     static final int CROP_FROM_ALBUM =2;
     static final int GET_ADDRESS =3;
     static final int VIEW_REFRESH =4;
     static final int MATTISSE_PICTURES =5;
-
     public static LocationManager locationManager;
     public Location location;
     public Uri mImageCaptureUri,croppath;
+    boolean isWifiConn = false;
+    boolean isMobileConn = false;
     WebSettings settings;
     private EndDialog mEndDialog;
     Boolean before_refreshlayout,now_refreshlayout;
     int flg_snackbar=0;
+    private AlertDialog dialog_network;
 
     String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -85,7 +91,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
     };
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
-    private NetworkReceiver receiver;
+    private BroadcastReceiver receiver;
     private boolean hasPermissions(String[] permissions){
         // 퍼미션 확인
         int result = -1;
@@ -132,8 +138,62 @@ public class SubWebveiwActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         am.addActivity(this);
 
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkReceiver();
+
+        //네트워크 체인지 리시버
+        IntentFilter filter = new IntentFilter
+                (ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new BroadcastReceiver(){
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Log.d("receive_chk","sub");
+                isWifiConn = false;
+                isMobileConn = false;
+
+                ConnectivityManager connMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (connMgr != null) {
+                        NetworkCapabilities capabilities = connMgr.getNetworkCapabilities(connMgr.getActiveNetwork());
+                        if (capabilities != null) {
+                            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                                isWifiConn = true;
+                            }
+                            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                                isMobileConn = true;
+                            }
+                        }
+                    }
+                } else {
+                    if (connMgr != null) {
+                        NetworkInfo activeNetwork = connMgr.getActiveNetworkInfo();
+                        if (activeNetwork != null) {
+                            // connected to the internet
+                            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                                isWifiConn = true;
+                            }
+                            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                                isMobileConn = true;
+                            }
+                        }
+                    }
+                }
+
+                if (isMobileConn == false && isWifiConn == false) {
+
+                    Log.d("receiver_log","on");
+
+                    if(dialog_network==null)
+                        settingModal2();
+                    else {
+                        if (!dialog_network.isShowing())
+                            settingModal2();
+                    }
+
+                }
+            }
+        };
         this.registerReceiver(receiver, filter);
 
         settings = webView.getSettings();
@@ -239,6 +299,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
         super.onDestroy();
         //Toast.makeText(getApplicationContext(),now_refreshlayout.toString()+","+before_refreshlayout.toString(),Toast.LENGTH_LONG).show();
         //subrefreshlayout.setEnabled(before_refreshlayout);
+        this.unregisterReceiver(receiver);
     }
 
     public void set_filePathCallbackLollipop(ValueCallback<Uri[]> filePathCallbackLollipop){
@@ -504,6 +565,13 @@ public class SubWebveiwActivity extends AppCompatActivity {
             Norefresh();
 
         }
+        else if(flg_blockmodal!=0 && (webView.getUrl().contains("bo_table=deal")&&webView.getUrl().contains("wr_id="))){
+
+            Log.d("backpress_closemd5", webView.getUrl());
+            webView.loadUrl("javascript:close_blockmd()");
+            Norefresh();
+
+        }
 
         else if(webView.getUrl().equals(getString(R.string.home)) || webView.getUrl().equals(getString(R.string.home2))
                 || webView.getUrl().contains("flg_snackbar=") ){
@@ -511,7 +579,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
             mEndDialog = new EndDialog(SubWebveiwActivity.this);
             mEndDialog.setCancelable(true);
             mEndDialog.show();
-            Display display = getWindowManager().getDefaultDisplay();
+            /*Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
 
@@ -519,7 +587,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
             int x = (int)(size.x * 0.8f);
             int y = (int)(size.y* 0.45f);
 
-            window.setLayout(x,y);
+            window.setLayout(x,y);*/
 
             bm.removeAllHistory();
 
@@ -675,8 +743,10 @@ public class SubWebveiwActivity extends AppCompatActivity {
                     }
                 }
                 else if(last.contains("write_comment_update.php")) {
+
                     if(back2_url.contains("w=cu")){
 
+                        Log.d("commet_update","if");
                         bm.removelast();
                         bm.removelast();
                         onBackPressed();
@@ -685,10 +755,12 @@ public class SubWebveiwActivity extends AppCompatActivity {
                     }
                     else{
 
+                       // Log.d("commet_update",bm.getHistorylist().toString());
                         bm.removelast();
                         onBackPressed();
 
                     }
+
                 }
 
                 else if( last.contains("delete.php") ){
@@ -700,19 +772,23 @@ public class SubWebveiwActivity extends AppCompatActivity {
                 }
                 else {
                     bm.removelast();
-                    if(last.contains("board.php") && !last.contains("wr_id=")) {
+                    if(backurl.contains("board.php") && !backurl.contains("wr_id=")) {
                         if(webView.canGoBack()){
                             webView.goBack();
                         }
                         else{
-
                             finish();
                         }
                     }
                     else {
-                        webView.loadUrl(last);
+                        if(webView.getUrl().contains("flg_movebt=1")) {
+                            webView.goBack();
+                            onBackPressed();
+                        }
+                        else {
+                            webView.loadUrl(last);
+                        }
                     }
-
                 }
             }
         }
@@ -984,6 +1060,9 @@ public class SubWebveiwActivity extends AppCompatActivity {
         negativeButton.setTextColor(Color.parseColor("#ff0000"));
 
     }
+
+
+
     public void Confirm_alert_cancleable(String Message,String state, String href){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(SubWebveiwActivity.this);
@@ -1095,6 +1174,39 @@ public class SubWebveiwActivity extends AppCompatActivity {
     public void click_dialogY(View view){
         //    Toast.makeText(mContext.getApplicationContext(),"test2",Toast.LENGTH_LONG).show();
         am.finishAllActivity();
+    }
+
+    public void settingModal2(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("");
+        builder.setMessage("네트워크 연결이 안되어 있습니다.");
+        builder.setNegativeButton("설정하기",   new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("start_setting","1");
+                startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                Log.d("start_setting","2");
+                am.finishAllActivity();
+                Log.d("start_setting","3");
+            }
+        });
+        builder.setPositiveButton("확인",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //android.os.Process.killProcess(android.os.Process.myPid());
+                am.finishAllActivity();
+            }
+        });
+
+        builder.setCancelable(false);
+        dialog_network = builder.create();
+        //  mainActivity.current_dialog = dialog;
+        dialog_network.show();
+        Button positiveButton = dialog_network.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setTextColor(Color.parseColor("#9dc543"));
+        Button negativeButton = dialog_network.getButton(AlertDialog.BUTTON_NEGATIVE);
+        negativeButton.setTextColor(Color.parseColor("#000000"));
     }
 
 }

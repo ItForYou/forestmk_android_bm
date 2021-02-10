@@ -11,6 +11,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,8 @@ import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,8 +56,8 @@ import kr.co.itforone.forestmk_android.imageswiper.ImagedtActivity;
 import kr.co.itforone.forestmk_android.util.ActivityManager;
 import kr.co.itforone.forestmk_android.util.BackHistoryManager;
 import kr.co.itforone.forestmk_android.util.EndDialog;
-import kr.co.itforone.forestmk_android.util.NetworkReceiver;
 
+import static kr.co.itforone.forestmk_android.SplashActivity.receiver;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -78,12 +81,15 @@ public class MainActivity extends AppCompatActivity {
     static final int VIEW_REFRESH =4;
     private LocationManager locationManager;
     private EndDialog mEndDialog;
+    boolean isWifiConn = false;
+    boolean isMobileConn = false;
     WebSettings settings;
     boolean gps_enabled = false, now_refreshlayout=true;
     String user_id, user_pwd;
-    int flg_alert = 0, flg_confirm=0, flg_modal=0,flg_sortmodal=0, flg_dclmodal=0, flg_dclcommmodal=0;
+    int flg_alert = 0, flg_confirm=0, flg_modal=0,flg_sortmodal=0, flg_dclmodal=0, flg_dclcommmodal=0, flg_blockmodal=0;
     long backPrssedTime =0;
-    private NetworkReceiver receiver;
+    private AlertDialog dialog_network;
+
     String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -102,7 +108,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         }
+
         Log.d("per_result",String.valueOf(result));
+
         if (result == PackageManager.PERMISSION_GRANTED) {
             return true;
         }else {
@@ -143,9 +151,62 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         am.addActivity(this);
+
+        //네트워크 체인지 리시버
         IntentFilter filter = new IntentFilter
                 (ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkReceiver();
+        receiver = new BroadcastReceiver(){
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Log.d("receive_chk","main");
+
+                isWifiConn = false;
+                isMobileConn = false;
+
+                ConnectivityManager connMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (connMgr != null) {
+                        NetworkCapabilities capabilities = connMgr.getNetworkCapabilities(connMgr.getActiveNetwork());
+                        if (capabilities != null) {
+                            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                                isWifiConn = true;
+                            }
+                            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                                isMobileConn = true;
+                            }
+                        }
+                    }
+                } else {
+                    if (connMgr != null) {
+                        NetworkInfo activeNetwork = connMgr.getActiveNetworkInfo();
+                        if (activeNetwork != null) {
+                            // connected to the internet
+                            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                                isWifiConn = true;
+                            }
+                            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                                isMobileConn = true;
+                            }
+                        }
+                    }
+                }
+
+                if (isMobileConn == false && isWifiConn == false) {
+                    Log.d("receiver_log","on");
+
+                    if(dialog_network==null) {
+                        settingModal2();
+                    }
+                    else{
+                        if(!dialog_network.isShowing())
+                            settingModal2();
+                    }
+                }
+            }
+        };
         this.registerReceiver(receiver, filter);
 
        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
@@ -172,8 +233,6 @@ public class MainActivity extends AppCompatActivity {
            //             Toast.makeText(getApplicationContext(), token, Toast.LENGTH_SHORT).show();
                     }
         });
-
-
 
         settings = webView.getSettings();
         webView.setWebChromeClient(new ChromeManager(this,this));
@@ -213,8 +272,15 @@ public class MainActivity extends AppCompatActivity {
                 if(bm.getHistorylist().size()<=0)
                     bm.addHitory(getString(R.string.home));
 
-                webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&android_push=1");
-                pushurl="";
+                if(pushurl.length()>1){
+                    webView.loadUrl(pushurl);
+                    //webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&"+pushurl);
+                    pushurl = "";
+                }
+                else {
+                    webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&android_push=1");
+                    pushurl = "";
+                }
 
             }
             else{
@@ -264,6 +330,15 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("lastchk",String.valueOf(now_refreshlayout));
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(pushurl!=null||!pushurl.isEmpty()) {
+         //   this.unregisterReceiver(receiver);
+        }
 
 
     }
@@ -347,6 +422,13 @@ public class MainActivity extends AppCompatActivity {
             Norefresh();
 
         }
+        else if(flg_blockmodal!=0 && (webView.getUrl().contains("bo_table=deal")&&webView.getUrl().contains("wr_id="))){
+
+            Log.d("backpress_closemd5", webView.getUrl());
+            webView.loadUrl("javascript:close_blockmd()");
+            Norefresh();
+
+        }
 
         else if(webView.getUrl().equals(getString(R.string.home)) || webView.getUrl().equals(getString(R.string.home2))
                 || webView.getUrl().contains("flg_snackbar=") ){
@@ -354,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
             mEndDialog = new EndDialog(MainActivity.this);
             mEndDialog.setCancelable(true);
             mEndDialog.show();
-            Display display = getWindowManager().getDefaultDisplay();
+          /*  Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
 
@@ -362,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
             int x = (int)(size.x * 0.8f);
             int y = (int)(size.y* 0.45f);
 
-            window.setLayout(x,y);
+            window.setLayout(x,y);*/
 
             bm.removeAllHistory();
         }
@@ -812,6 +894,40 @@ public class MainActivity extends AppCompatActivity {
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setTextColor(Color.parseColor("#9dc543"));
         Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        negativeButton.setTextColor(Color.parseColor("#000000"));
+    }
+
+
+    public void settingModal2(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("");
+        builder.setMessage("네트워크 연결이 안되어 있습니다.");
+        builder.setNegativeButton("설정하기",   new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("start_setting","1");
+                startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                Log.d("start_setting","2");
+                am.finishAllActivity();
+                Log.d("start_setting","3");
+            }
+        });
+        builder.setPositiveButton("확인",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //android.os.Process.killProcess(android.os.Process.myPid());
+                am.finishAllActivity();
+            }
+        });
+
+        builder.setCancelable(false);
+        dialog_network = builder.create();
+        //  mainActivity.current_dialog = dialog;
+        dialog_network.show();
+        Button positiveButton = dialog_network.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setTextColor(Color.parseColor("#9dc543"));
+        Button negativeButton = dialog_network.getButton(AlertDialog.BUTTON_NEGATIVE);
         negativeButton.setTextColor(Color.parseColor("#000000"));
     }
 

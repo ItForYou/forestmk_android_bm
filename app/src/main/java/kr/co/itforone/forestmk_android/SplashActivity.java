@@ -2,9 +2,11 @@ package kr.co.itforone.forestmk_android;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -17,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,8 +29,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.net.NetworkInterface;
-
 import kr.co.itforone.forestmk_android.util.ActivityManager;
+
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -36,6 +39,7 @@ public class SplashActivity extends AppCompatActivity {
     boolean isWifiConn = false;
     boolean isMobileConn = false;
     private ActivityManager am = ActivityManager.getInstance();
+    public static BroadcastReceiver receiver;
     String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -58,7 +62,8 @@ public class SplashActivity extends AppCompatActivity {
         Log.d("per_result",String.valueOf(result));
         if (result == PackageManager.PERMISSION_GRANTED) {
             return true;
-        }else {
+        }
+        else {
             return false;
         }
 
@@ -89,7 +94,7 @@ public class SplashActivity extends AppCompatActivity {
                                 startActivity(main);
                                 finish();
                             } else {
-                                settingModal();
+                                 settingModal();
                             }
 
                         }
@@ -106,6 +111,17 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         am.addActivity(this);
 
+        IntentFilter filter = new IntentFilter
+                (ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+            }
+        };
+        this.registerReceiver(receiver, filter);
+
+        Log.d("list_am",am.getActivityList().toString());
         ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
 
         Intent push = getIntent();
@@ -164,6 +180,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                //android.os.Process.killProcess(android.os.Process.myPid());
                 am.finishAllActivity();
             }
         });
@@ -182,5 +199,6 @@ public class SplashActivity extends AppCompatActivity {
     public void onBackPressed() {
         am.finishAllActivity();
     }
+
 }
 

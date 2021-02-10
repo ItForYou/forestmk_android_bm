@@ -192,6 +192,11 @@ class SubWebviewJavainterface {
     }
 
     @JavascriptInterface
+    public void setflgmodal5(int i) {
+        activity.flg_blockmodal=i;
+    }
+
+    @JavascriptInterface
     public void set_flgsave(int flg_save){
 
         SharedPreferences pref = activity.getSharedPreferences("save_flg", activity.MODE_PRIVATE);

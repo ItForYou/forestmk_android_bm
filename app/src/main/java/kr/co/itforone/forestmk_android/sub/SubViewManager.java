@@ -20,6 +20,7 @@ class SubViewManager extends WebViewClient {
         this.context = context;
         this.mainActivity = mainActivity;
     }
+
     public SubViewManager(SubWebveiwActivity context) {
         this.context = context;
     }
@@ -38,6 +39,7 @@ class SubViewManager extends WebViewClient {
 
             context.settings.setSupportZoom(true);   //화면 확대축소
             context.settings.setBuiltInZoomControls(true);
+
             context.settings.setDisplayZoomControls(false);
 
         }
@@ -78,7 +80,7 @@ class SubViewManager extends WebViewClient {
                     (url.contains("board.php") && !url.contains("wr_id=")) || url.contains("mypage.php") ||
                     url.contains("login.php") || url.contains("mymap.php") || url.contains("myhp.php") || url.contains("img_view.php")||
                     url.contains("chatting.php") || url.contains("mysetting.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
-            !url.contains("wr_id="))
+            !url.contains("wr_id=")) || (url.contains("board.php?bo_table=deal") &&  url.contains("wr_id="))
             ){
                 Log.d("history_refresh","no");
                 context.Norefresh();
