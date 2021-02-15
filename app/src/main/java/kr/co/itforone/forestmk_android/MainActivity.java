@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     WebSettings settings;
     boolean gps_enabled = false, now_refreshlayout=true;
     String user_id, user_pwd;
-    int flg_alert = 0, flg_confirm=0, flg_modal=0,flg_sortmodal=0, flg_dclmodal=0, flg_dclcommmodal=0, flg_blockmodal=0;
+    int flg_alert = 0, flg_confirm=0, flg_modal=0,flg_sortmodal=0, flg_dclmodal=0, flg_dclcommmodal=0, flg_blockmodal=0, flg_opensearch=0;
     long backPrssedTime =0;
     private AlertDialog dialog_network;
 
@@ -466,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        else if(now_his.size()>0) {
+        else if(now_his.size()>0){
 
             Log.d("history_back_last", last);
             if(last.equals("intent")) {
@@ -510,7 +510,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         else{
-
+/*
             mEndDialog = new EndDialog(MainActivity.this);
             mEndDialog.setCancelable(true);
             mEndDialog.show();
@@ -523,7 +523,7 @@ public class MainActivity extends AppCompatActivity {
             int y = (int)(size.y* 0.45f);
 
             window.setLayout(x,y);
-
+*/
         }
      /*  if(webView.canGoBack()){
             webView.goBack();

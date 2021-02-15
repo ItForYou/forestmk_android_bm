@@ -210,7 +210,7 @@ class SubWebviewJavainterface {
     public void opensearch(){
         SharedPreferences pref = activity.getSharedPreferences("save_flg", MODE_PRIVATE);
         int value  = pref.getInt("value", 1);
-
+        activity.flg_opensearch =1;
 
         activity.webView.post(new Runnable() {
             @Override

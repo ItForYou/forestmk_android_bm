@@ -84,13 +84,16 @@ class WebviewJavainterface {
 
         SharedPreferences pref = mainActivity.getSharedPreferences("save_flg", MODE_PRIVATE);
         int value  = pref.getInt("value", 1);
-
+        mainActivity.flg_opensearch = 1;
 
             mainActivity.webView.post(new Runnable() {
                 @Override
                 public void run() {
                         if(value ==1) {
+
+
                             mainActivity.webView.loadUrl("javascript:sch_saveactive();");
+
                         }
                         else{
                             mainActivity.webView.loadUrl("javascript:sch_saveinactive();");

@@ -39,14 +39,15 @@ class SubViewManager extends WebViewClient {
 
             context.settings.setSupportZoom(true);   //화면 확대축소
             context.settings.setBuiltInZoomControls(true);
-
             context.settings.setDisplayZoomControls(false);
 
         }
         else{
+
             context.settings.setSupportZoom(false);   //화면 확대축소
             context.settings.setBuiltInZoomControls(false);
             context.settings.setDisplayZoomControls(false);
+
         }
 
         if(url.contains("category.php") || url.contains("recent_list.php") || (url.contains("mypage.php") && !url.contains("compulsive"))
@@ -75,12 +76,13 @@ class SubViewManager extends WebViewClient {
         }
 
         else {
+
             //Toast.makeText(mainActivity.getApplicationContext(),"view"+String.valueOf(mainActivity.flg_alert), Toast.LENGTH_LONG).show();
             if(url.contains("register_form.php") || url.contains("password_lost.php") ||
-                    (url.contains("board.php") && !url.contains("wr_id=")) || url.contains("mypage.php") ||
+                    (url.contains("board.php") && !url.contains("wr_id=") && !url.contains("bo_table=deal")) || url.contains("mypage.php") ||
                     url.contains("login.php") || url.contains("mymap.php") || url.contains("myhp.php") || url.contains("img_view.php")||
                     url.contains("chatting.php") || url.contains("mysetting.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
-            !url.contains("wr_id=")) || (url.contains("board.php?bo_table=deal") &&  url.contains("wr_id="))
+            !url.contains("wr_id=")) || (url.contains("board.php?bo_table=deal") &&  url.contains("wr_id=")) || (url.contains("fn=") && url.contains("bo_table=notice"))
             ){
                 Log.d("history_refresh","no");
                 context.Norefresh();
@@ -96,6 +98,7 @@ class SubViewManager extends WebViewClient {
             bm.addHitory(view.getOriginalUrl());
             Log.d("history_original_url",view.getOriginalUrl());
             view.loadUrl(url);
+
             Log.d("history_back_should",bm.getHistorylist().toString());
 
             return false;

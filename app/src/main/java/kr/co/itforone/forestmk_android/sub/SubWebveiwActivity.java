@@ -60,7 +60,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
     @BindView(R.id.sub_refreshlayout)   SwipeRefreshLayout subrefreshlayout;
     //@BindView(R.id.refreshlayout)   SwipeRefreshLayout refreshlayout;
     @BindView(R.id.subWebview)    public WebView webView;
-    int flg_alert =0,flg_confirm=0,flg_modal =0,flg_sortmodal=0,flg_dclmodal=0,flg_dclcommmodal=0,flg_blockmodal=0;
+    int flg_alert =0,flg_confirm=0,flg_modal =0,flg_sortmodal=0,flg_dclmodal=0,flg_dclcommmodal=0,flg_blockmodal=0, flg_opensearch=0;
     public int flg_refresh = 1;
     private ActivityManager am = ActivityManager.getInstance();
     private BackHistoryManager bm = BackHistoryManager.getInstance();
@@ -704,6 +704,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
                     onBackPressed();
                     return;
                 }
+
                 bm.removelast();
                 Log.d("test_back1",back2_url);
                 Intent intent = new Intent();
@@ -716,13 +717,15 @@ public class SubWebveiwActivity extends AppCompatActivity {
 
             else{
 
-                if(last.contains("login_check.php") || last.contains("register_form_update.php") || last.contains("delete_comment.php") || last.contains("mypage.php")
-                ){
+        //mypage.php 막아둔 이유 찾아야함! 테스트 해봐야 될 상황 (푸시, 댓글, 글쓰기, )
+
+                if(last.contains("login_check.php") || last.contains("register_form_update.php") || last.contains("delete_comment.php") ){
 
                     bm.removelast();
                     onBackPressed();
 
                 }
+
                 else if(last.contains("write_update.php") ){
 
                     if(back2_url.contains("w=u")){
