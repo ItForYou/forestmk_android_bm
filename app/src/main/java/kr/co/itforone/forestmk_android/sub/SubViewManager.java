@@ -30,6 +30,7 @@ class SubViewManager extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
       //  Toast.makeText(context.getApplicationContext(),"sub - " +url,Toast.LENGTH_LONG).show();
 
         boolean lastchk = context.now_refreshlayout;
@@ -42,6 +43,7 @@ class SubViewManager extends WebViewClient {
             context.settings.setDisplayZoomControls(false);
 
         }
+
         else{
 
             context.settings.setSupportZoom(false);   //화면 확대축소

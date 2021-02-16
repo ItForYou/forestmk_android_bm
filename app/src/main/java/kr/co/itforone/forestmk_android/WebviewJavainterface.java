@@ -35,6 +35,10 @@ class WebviewJavainterface {
         mainActivity.startActivity(intent);
 
     }
+    @JavascriptInterface
+    public void set_flgopensearch(int i){
+        mainActivity.flg_opensearch = i;
+    }
 
     @JavascriptInterface
     public void show_snackbar(String message){

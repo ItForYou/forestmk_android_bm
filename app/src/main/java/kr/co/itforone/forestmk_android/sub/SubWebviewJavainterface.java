@@ -207,7 +207,13 @@ class SubWebviewJavainterface {
     }
 
     @JavascriptInterface
+    public void set_flgopensearch(int i){
+        activity.flg_opensearch = i;
+    }
+
+    @JavascriptInterface
     public void opensearch(){
+
         SharedPreferences pref = activity.getSharedPreferences("save_flg", MODE_PRIVATE);
         int value  = pref.getInt("value", 1);
         activity.flg_opensearch =1;
@@ -221,10 +227,8 @@ class SubWebviewJavainterface {
                 else{
                     activity.webView.loadUrl("javascript:sch_saveinactive();");
                 }
-
             }
         });
-
 
     }
 
