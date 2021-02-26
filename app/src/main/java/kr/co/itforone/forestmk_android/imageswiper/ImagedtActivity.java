@@ -86,6 +86,7 @@ public class ImagedtActivity extends AppCompatActivity {
                 }
             });
         }
+
     }
 
     @Override

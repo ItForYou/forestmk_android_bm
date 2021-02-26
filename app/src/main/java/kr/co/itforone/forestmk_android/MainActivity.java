@@ -429,6 +429,12 @@ public class MainActivity extends AppCompatActivity {
             Norefresh();
 
         }
+        else if(flg_opensearch!=0 && (webView.getUrl().contains("bo_table=deal"))){
+
+            Log.d("backpress_closemd6", webView.getUrl());
+            webView.loadUrl("javascript:close_search()");
+
+        }
 
         else if(webView.getUrl().equals(getString(R.string.home)) || webView.getUrl().equals(getString(R.string.home2))
                 || webView.getUrl().contains("flg_snackbar=") ){

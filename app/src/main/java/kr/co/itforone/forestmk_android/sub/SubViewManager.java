@@ -32,7 +32,7 @@ class SubViewManager extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
       //  Toast.makeText(context.getApplicationContext(),"sub - " +url,Toast.LENGTH_LONG).show();
-
+        context.flg_opensearch=0;
         boolean lastchk = context.now_refreshlayout;
         Log.d("backpress_should",url);
 
@@ -54,6 +54,7 @@ class SubViewManager extends WebViewClient {
 
         if(url.contains("category.php") || url.contains("recent_list.php") || (url.contains("mypage.php") && !url.contains("compulsive"))
                 ||  (url.contains("board.php")&&!url.contains("wr_id") && !url.contains("compulsive") && !url.contains("flg_snackbar"))  || (url.contains("write.php") && url.contains("deal"))
+                || url.contains("list_message.php")
                 ){
 
             Log.d("backpress_newintent",url);

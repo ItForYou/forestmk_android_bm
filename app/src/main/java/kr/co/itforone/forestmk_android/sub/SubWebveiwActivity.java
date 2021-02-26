@@ -575,7 +575,7 @@ public class SubWebveiwActivity extends AppCompatActivity {
         else if(flg_opensearch!=0 && webView.getUrl().contains("bo_table=deal")){
 
             Log.d("backpress_closemd6", webView.getUrl());
-            webView.loadUrl("javascript:close_blockmd()");
+            webView.loadUrl("javascript:close_search()");
             Norefresh();
 
         }

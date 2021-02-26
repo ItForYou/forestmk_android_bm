@@ -35,6 +35,7 @@ public class Adapter_image extends RecyclerView.Adapter<ViewHolderPage>{
                     .load(listdata.get(position).getSrc())
                     .into(holder.imageview);
         }
+
     }
 
     @Override
