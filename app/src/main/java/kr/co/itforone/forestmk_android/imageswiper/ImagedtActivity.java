@@ -27,7 +27,8 @@ public class ImagedtActivity extends AppCompatActivity {
     @BindView(R.id.swiperimg)
     ViewPager2 swiperimg;
     @BindView(R.id.indicator)    CircleIndicator3 indicator;
-    String wr_id = "";
+    String wr_id = "",notice="";
+    int current=0;
     itemModel model;
 
     @Override
@@ -41,10 +42,16 @@ public class ImagedtActivity extends AppCompatActivity {
         Intent i = getIntent();
         if(i!=null){
             this.wr_id = i.getStringExtra("wr_id");
+            this.notice = i.getStringExtra("notice");
+            this.current = i.getIntExtra("current",0);
         }
 
         Map<String, String> map = new HashMap<>();
         map.put("wr_id", wr_id);
+        if(!notice.isEmpty() && !notice.equals("")){
+            map.put("notice", notice);
+            map.put("bf_no", String.valueOf(current));
+        }
 
         Log.d("map_wrid", map.toString());
 
@@ -52,30 +59,40 @@ public class ImagedtActivity extends AppCompatActivity {
 
             RetrofitService networkService = RetrofitHelper.getRetrofit().create(RetrofitService.class);
             Call<itemModel> call = networkService.createPost(map);
-
             call.enqueue(new Callback<itemModel>() {
                 @Override
                 public void onResponse(Call<itemModel> call, Response<itemModel> response) {
+
                     if (response.isSuccessful()) {
+                            Log.d("response_retro" , String.valueOf(response.body().writes.get(0).src));
                             model = response.body();
 
                             Adapter_image adapter_image = new Adapter_image(model.getWrites());
                             swiperimg.setAdapter(adapter_image);
-                            indicator.setViewPager(swiperimg);
-                            indicator.createIndicators(model.total_wr,0);
+                            if(adapter_image.getItemCount()>1) {
+                                indicator.setViewPager(swiperimg);
+                                indicator.createIndicators(model.total_wr, 0);
+                            }
                             swiperimg.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                                 @Override
                                 public void onPageSelected(int position) {
                                     super.onPageSelected(position);
-                                    indicator.animatePageSelected(position);
+                                    if(adapter_image.getItemCount()>1) {
+                                        indicator.animatePageSelected(position);
+                                    }
                                 }
                             });
+
+                            if(adapter_image.getItemCount()>1) {
+                                swiperimg.setCurrentItem(current,false);
+                            }
 
                     } else {
                         Log.d("result_call_fail", String.valueOf(response.isSuccessful()));
                         Toast.makeText(ImagedtActivity.this, "이미지를 불러오는데 실패하였습니다.", Toast.LENGTH_SHORT).show();
                         finish();
                     }
+
                 }
 
                 @Override
@@ -85,8 +102,8 @@ public class ImagedtActivity extends AppCompatActivity {
                     finish();
                 }
             });
-        }
 
+        }
     }
 
     @Override

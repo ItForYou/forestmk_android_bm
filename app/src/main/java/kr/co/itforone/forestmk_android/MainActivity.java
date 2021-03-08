@@ -272,19 +272,23 @@ public class MainActivity extends AppCompatActivity {
                 if(bm.getHistorylist().size()<=0)
                     bm.addHitory(getString(R.string.home));
 
-                if(pushurl.length()>1){
+                if(!pushurl.contains("android_push")){
+                    Log.d("pushurl", "if");
                     webView.loadUrl(pushurl);
                     //webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&"+pushurl);
                     pushurl = "";
                 }
                 else {
+                    Log.d("pushurl", "else");
                     webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&android_push=1");
                     pushurl = "";
                 }
 
             }
+
             else{
                 Log.d("history_loadurl2", "true");
+                Log.d("pushurl", "else of else");
                 if(bm.getHistorylist().size()<=0)
                     bm.addHitory(getString(R.string.home));
                 webView.loadUrl(pushurl);
@@ -339,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
         if(pushurl!=null||!pushurl.isEmpty()) {
          //   this.unregisterReceiver(receiver);
         }
-
 
     }
 

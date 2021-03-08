@@ -6,6 +6,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -134,11 +135,26 @@ class SubWebviewJavainterface {
     }
 
     @JavascriptInterface
-    public void show_detail(String wrid){
+    public void show_detail(String wrid, int current){
+
+
+       // Toast.makeText(activity, wrid + current, Toast.LENGTH_SHORT).show();
+        Intent test_retro = new Intent(activity, ImagedtActivity.class);
+        test_retro.putExtra("wr_id",wrid);
+        test_retro.putExtra("notice","");
+        test_retro.putExtra("current",current);
+        activity.startActivity(test_retro);
+
+    }
+
+    @JavascriptInterface
+    public void show_detail_notice(String wrid,int bfno){
 
 
         Intent test_retro = new Intent(activity, ImagedtActivity.class);
         test_retro.putExtra("wr_id",wrid);
+        test_retro.putExtra("notice","true");
+        test_retro.putExtra("current",bfno);
         activity.startActivity(test_retro);
 
     }
