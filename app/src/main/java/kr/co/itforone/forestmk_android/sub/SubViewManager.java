@@ -84,7 +84,7 @@ class SubViewManager extends WebViewClient {
             if(url.contains("register_form.php") || url.contains("password_lost.php") ||
                     (url.contains("board.php") && !url.contains("wr_id=") && !url.contains("bo_table=deal")) || url.contains("mypage.php") ||
                     url.contains("login.php") || url.contains("mymap.php") || url.contains("myhp.php") || url.contains("img_view.php")||
-                    url.contains("chatting.php") || url.contains("mysetting.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
+                    url.contains("chat_room.php") || url.contains("mysetting.php") || url.contains("chkservice.php") || (url.contains("board.php?bo_table=qna") &&
             !url.contains("wr_id=")) || (url.contains("board.php?bo_table=deal") &&  url.contains("wr_id=")) || (url.contains("fn=") && url.contains("bo_table=notice"))
             ){
                 Log.d("history_refresh","no");

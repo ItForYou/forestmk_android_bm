@@ -36,7 +36,6 @@ class SubWebviewJavainterface {
 
     }
 
-
     @JavascriptInterface
     public void set_address(String addr12, String addr11){
       //  Toast.makeText(activity.getApplicationContext(),addr11,Toast.LENGTH_LONG).show();
@@ -164,7 +163,7 @@ class SubWebviewJavainterface {
 
         //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
         Intent i = new Intent(activity.getApplicationContext(), ShowDetailimg.class);
-        i.putExtra("src",src);
+        i.putExtra("src",activity.getString(R.string.nodejsupload)+src);
         activity.startActivity(i);
 
     }
@@ -260,4 +259,9 @@ class SubWebviewJavainterface {
         activity.Yesrefresh();
         activity.flg_refresh=1;
     }*/
+   @JavascriptInterface
+   public void toastmsg(String msg){
+       Toast.makeText(activity.getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+   }
+
 }

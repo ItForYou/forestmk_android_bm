@@ -24,6 +24,7 @@ class WebviewJavainterface {
 
         this.mainActivity = mainActivity;
         this.activity=activity;
+        this.activity=activity;
 
     }
 
@@ -111,10 +112,10 @@ class WebviewJavainterface {
     public void detail_img(String src){
 
         //     Toast.makeText(mainActivity.getApplicationContext(),message, Toast.LENGTH_LONG).show();
-        Intent i = new Intent(mainActivity.getApplicationContext(),ShowDetailimg.class);
-        i.putExtra("src",src);
-        mainActivity.startActivity(i);
 
+        Intent i = new Intent(mainActivity.getApplicationContext(),ShowDetailimg.class);
+        i.putExtra("src",activity.getString(R.string.nodejsupload)+src);
+        mainActivity.startActivity(i);
     }
 
     @JavascriptInterface

@@ -49,11 +49,11 @@ class ViewManager extends WebViewClient{
 
             if (url.contains("category.php") || url.contains("recent_list.php") || (url.contains("mypage.php") && !url.contains("compulsive"))
                     || (url.contains("board.php") && !url.contains("wr_id=") && !url.contains("compulsive") && !url.contains("flg_snackbar"))
-                    || (url.contains("write.php") && url.contains("deal")) || url.contains("mysetting.php") || (url.contains("board.php?bo_table=qna") &&
-                    !url.contains("wr_id="))
+                    || (url.contains("write.php") && url.contains("deal")) || url.contains("mysetting.php")
+                    || (url.contains("board.php?bo_table=qna") && !url.contains("wr_id="))
             ) {
 
-                Log.d("backpress_newintent", url);
+
                 Intent intent = new Intent(mainActivity, SubWebveiwActivity.class);
              /*   if (!mainActivity.user_id.isEmpty() && !mainActivity.user_pwd.isEmpty() && !mainActivity.pushurl.isEmpty()) {
                     intent.putExtra("push_login", true);
@@ -81,11 +81,12 @@ class ViewManager extends WebViewClient{
             }
 
             else {
+
                 //Toast.makeText(mainActivity.getApplicationContext(),"view"+String.valueOf(mainActivity.flg_alert), Toast.LENGTH_LONG).show();
                 if (url.contains("register_form.php") || url.contains("password_lost.php") ||
                         (url.contains("board.php") && url.contains("wr_id=")) || url.contains("mypage.php") ||
                         url.contains("login.php") || url.contains("mymap.php") || url.contains("img_view.php") ||
-                        url.contains("chatting.php")
+                        url.contains("chat_room.php")
                 ) {
 
                     Log.d("comment_update","Norefresh");

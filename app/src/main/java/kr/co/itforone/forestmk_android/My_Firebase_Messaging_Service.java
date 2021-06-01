@@ -6,10 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.os.Build;
+import android.os.Vibrator;
+import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -20,16 +23,18 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
-    private static final String TAG = "MyFirebaseMsgService";
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
         Log.d("remote","Message:"+s);
     }
 
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> pushMessage = remoteMessage.getData();
+
+
 
         if(remoteMessage.getData().size() > 0) {
 
@@ -40,25 +45,31 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
         //  sendNotification(remoteMessage);
     }
     public void sendNotification(RemoteMessage remoteMessage){
+        int notify_id = 2101;
         String messageBody=remoteMessage.getData().get("message");
         String subject=remoteMessage.getData().get("subject");
         String goUrl=remoteMessage.getData().get("goUrl");
-        String channelId = "forestmk_android";
-        Log.d("remote","Message:"+remoteMessage.getFrom());
+        String tag=remoteMessage.getNotification().getTag();
+        String channelId = "chat";
+        Log.d("bundle","Message:"+remoteMessage.getNotification().getTag().toString());
+
+        if(tag.equals("chat")){
+            channelId = "chat";
+            notify_id = 2101;
+        }
+        else {
+            channelId = "note";
+            notify_id = 2102;
+        }
 
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("goUrl",goUrl);
 
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 15157 /* Request code */,
+                intent, PendingIntent.FLAG_ONE_SHOT);
 
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-
-        Bitmap BigPictureStyle= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
-        long vibrate[]={500,0,500,0};
         /**/
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
@@ -67,26 +78,32 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent)
-                        .setVibrate(vibrate)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody));
 
-
         Notification notification = notificationBuilder.build();
+
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
-                    NotificationManager.IMPORTANCE_HIGH);
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.enableVibration(true);
+            channel.enableLights(true);
             notificationManager.createNotificationChannel(channel);
+
             AudioAttributes att = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build();
 
         }
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
+        notificationManager.notify(notify_id /* ID of notification */, notification);
+        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+       // vibrator.vibrate(500);
+
     }
 }

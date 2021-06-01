@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
 
     private boolean hasPermissions(String[] permissions){
+
         // 퍼미션 확인해
         int result = -1;
         for (int i = 0; i < permissions.length; i++) {
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
     @SuppressLint("MissingPermission")
     @Override
@@ -152,20 +154,21 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         am.addActivity(this);
 
+
         //네트워크 체인지 리시버
         IntentFilter filter = new IntentFilter
                 (ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new BroadcastReceiver(){
+        receiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                Log.d("receive_chk","main");
+                Log.d("receive_chk", "main");
 
                 isWifiConn = false;
                 isMobileConn = false;
 
-                ConnectivityManager connMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (connMgr != null) {
@@ -195,13 +198,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (isMobileConn == false && isWifiConn == false) {
-                    Log.d("receiver_log","on");
+                    Log.d("receiver_log", "on");
 
-                    if(dialog_network==null) {
+                    if (dialog_network == null) {
                         settingModal2();
-                    }
-                    else{
-                        if(!dialog_network.isShowing())
+                    } else {
+                        if (!dialog_network.isShowing())
                             settingModal2();
                     }
                 }
@@ -209,9 +211,9 @@ public class MainActivity extends AppCompatActivity {
         };
         this.registerReceiver(receiver, filter);
 
-       ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
 
-        if(hasPermissions(PERMISSIONS)) {
+        if (hasPermissions(PERMISSIONS)) {
 
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -230,26 +232,31 @@ public class MainActivity extends AppCompatActivity {
                         }
                         // Get new Instance ID token
                         token = task.getResult().getToken();
-           //             Toast.makeText(getApplicationContext(), token, Toast.LENGTH_SHORT).show();
+                        //             Toast.makeText(getApplicationContext(), token, Toast.LENGTH_SHORT).show();
                     }
-        });
+                });
 
         settings = webView.getSettings();
-        webView.setWebChromeClient(new ChromeManager(this,this));
+        webView.setWebChromeClient(new ChromeManager(this, this));
         webView.setWebViewClient(new ViewManager(this, this));
-        webView.addJavascriptInterface(new WebviewJavainterface(this, this),"Android");
-
+        webView.addJavascriptInterface(new WebviewJavainterface(this, this), "Android");
         settings.setJavaScriptEnabled(true);
         settings.setAllowFileAccess(true);//웹에서 파일 접근 여부
         settings.setAppCacheEnabled(true);//캐쉬 사용여부
         settings.setDatabaseEnabled(true);//HTML5에서 db 사용여부 -> indexDB
         settings.setDomStorageEnabled(true);//HTML5에서 DOM 사용여부
         settings.setUseWideViewPort(true);//웹에서 view port 사용여부
-        settings.setUserAgentString("forestmk");
+        settings.setUserAgentString(settings.getUserAgentString() + "forestmk");
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);//캐시 사용모드 LOAD_NO_CACHE는 캐시를 사용않는다는 뜻
         settings.setTextZoom(100);       // 폰트크기 고정
         webView.setWebContentsDebuggingEnabled(true);
-       // webView.setLongClickable(true);
+        if(Build.VERSION.SDK_INT >= 19){
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        }else{
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+        }
+
+        // webView.setLongClickable(true);
 
         SharedPreferences pref = getSharedPreferences("logininfo", MODE_PRIVATE);
         user_id = pref.getString("id", "");
@@ -263,20 +270,25 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("pushurl", pushurl);
 
-        if(!pushurl.isEmpty() && !pushurl.equals("")){
+        if (!pushurl.isEmpty() && !pushurl.equals("")) {
 
-            if(!user_id.isEmpty() && !user_pwd.isEmpty()){
+            if (!user_id.isEmpty() && !user_pwd.isEmpty()) {
 
                 Log.d("history_loadurl1", "true");
 
-                if(bm.getHistorylist().size()<=0)
+                if (bm.getHistorylist().size() <= 0)
                     bm.addHitory(getString(R.string.home));
 
-                if(!pushurl.contains("android_push")){
+                if (!pushurl.contains("android_push") && !pushurl.contains("chat_push")) {
                     Log.d("pushurl", "if");
                     webView.loadUrl(pushurl);
                     //webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&"+pushurl);
                     pushurl = "";
+                }
+                else if(pushurl.contains("chat_push")){
+                    //Log.d("pushurl", getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + "&room_idx=" + pushurl);
+                    webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd + pushurl);
+                    pushurl="";
                 }
                 else {
                     Log.d("pushurl", "else");
@@ -284,24 +296,20 @@ public class MainActivity extends AppCompatActivity {
                     pushurl = "";
                 }
 
-            }
-
-            else{
+            } else {
                 Log.d("history_loadurl2", "true");
                 Log.d("pushurl", "else of else");
-                if(bm.getHistorylist().size()<=0)
+                if (bm.getHistorylist().size() <= 0)
                     bm.addHitory(getString(R.string.home));
                 webView.loadUrl(pushurl);
-                pushurl="";
+                pushurl = "";
             }
 
-        }
-        else if(!user_id.isEmpty() && !user_pwd.isEmpty()){
-                webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd);
-         //   webView.clearCache(true);
-         //   webView.clearHistory();
-        }
-        else {
+        } else if (!user_id.isEmpty() && !user_pwd.isEmpty()) {
+            webView.loadUrl(getString(R.string.login) + "mb_id=" + user_id + "&mb_password=" + user_pwd);
+            //   webView.clearCache(true);
+            //   webView.clearHistory();
+        } else {
             webView.loadUrl(getString(R.string.home));
         }
 
@@ -320,21 +328,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScrollChanged() {
 
-                if(webView.getScrollY() == 0 && flg_refresh ==1){
-                   Log.d("nowrefre",String.valueOf(now_refreshlayout));
+                if (webView.getScrollY() == 0 && flg_refresh == 1) {
+                    Log.d("nowrefre", String.valueOf(now_refreshlayout));
                     now_refreshlayout = true;
                     refreshlayout.setEnabled(true);
-                }
-                else{
-                    Log.d("nowrefre",String.valueOf(now_refreshlayout));
-                  //  refreshlayout.setEnabled(false);
+                } else {
+                    Log.d("nowrefre", String.valueOf(now_refreshlayout));
+                    //  refreshlayout.setEnabled(false);
                 }
             }
         });
 
-        Log.d("lastchk",String.valueOf(now_refreshlayout));
+        Log.d("lastchk", String.valueOf(now_refreshlayout));
 
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -377,15 +386,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } catch (NullPointerException e) {
-
             e.printStackTrace();
-
         }
 
         if(last.contains("register_form.php") || last.contains("password_lost.php") ||
                 (last.contains("board.php") && last.contains("wr_id=")) || last.contains("mypage.php") ||
-                last.contains("login.php") || last.contains("mymap.php") || last.contains("mysetting.php") || last.contains("chkservice.php") || (last.contains("board.php?bo_table=qna") &&
-                !last.contains("wr_id="))) {
+                last.contains("login.php") || last.contains("mymap.php") || last.contains("mysetting.php") || last.contains("chkservice.php")
+                || (last.contains("board.php?bo_table=qna") &&!last.contains("wr_id="))) {
 
             Log.d("history_NoRefresh!!", backurl);
             Norefresh();
@@ -458,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
             bm.removeAllHistory();
         }
 
-        else if(webView.getUrl().contains("chatting.list.php")){
+        else if(webView.getUrl().contains("chat_list.php")){
 
             bm.removeAllHistory();
           //  webView.clearCache(true);
@@ -466,11 +473,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        else if(webView.getUrl().contains("chatting.php")){
+        else if(webView.getUrl().contains("chat_room.php")){
 
             bm.removeAllHistory();
         //    webView.clearCache(true);
-            webView.loadUrl("javascript:leavepage()");
+            webView.loadUrl(getString(R.string.chattinglist_v2));
           //  webView.loadUrl(getString(R.string.chattinglist));
 
         }
@@ -720,28 +727,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
             //광고 글쓰기 주소 검색
             case GET_ADDRESS:
-                    if(resultCode==33) {
-                        String data_address12 = data.getStringExtra("address12");
-                        String data_address11 = data.getStringExtra("address11");
-                        webView.loadUrl("javascript:set_wr12('" + data_address12 + "','"+data_address11+"')");
-                    }
-                   //Toast.makeText(getApplicationContext(),"get_addr", Toast.LENGTH_LONG).show();
+                if (resultCode == 33) {
+                    String data_address12 = data.getStringExtra("address12");
+                    String data_address11 = data.getStringExtra("address11");
+                    webView.loadUrl("javascript:set_wr12('" + data_address12 + "','" + data_address11 + "')");
+                }
+                //Toast.makeText(getApplicationContext(),"get_addr", Toast.LENGTH_LONG).show();
                 break;
             case ChromeManager.FILECHOOSER_LOLLIPOP_REQ_CODE:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     if (resultCode == RESULT_OK && webView.getUrl().contains("register_form.php")) {
                         if (data != null) {
                             //String dataString = data.getDataString();
                             //  ClipData clipData = data.getClipData();
                             Uri result = (data == null || resultCode != RESULT_OK) ? null : data.getData();
                             CropImage.activity(result)
-                                    .setAspectRatio(1,1)//가로 세로 1:1로 자르기 기능 * 1:1 4:3 16:9로 정해져 있어요
+                                    .setAspectRatio(1, 1)//가로 세로 1:1로 자르기 기능 * 1:1 4:3 16:9로 정해져 있어요
                                     .setCropShape(CropImageView.CropShape.OVAL)
                                     .start(this);
                         } else {
@@ -783,57 +790,57 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
 
-                        CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                        if(result!=null) {
-                                Uri resultUri = result.getUri();
-                                Uri[] arr_Uri = new Uri[1];
-                                arr_Uri[0] = resultUri;
-                                filePathCallbackLollipop.onReceiveValue(arr_Uri);
-                                filePathCallbackLollipop = null;
-                            }
-                        else {
-                            try {
-                                if (filePathCallbackLollipop != null) {
-                                    filePathCallbackLollipop.onReceiveValue(null);
-                                    filePathCallbackLollipop = null;
-                                }
-                            } catch (Exception e) {
-                            }
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (result != null) {
+                    Uri resultUri = result.getUri();
+                    Uri[] arr_Uri = new Uri[1];
+                    arr_Uri[0] = resultUri;
+                    filePathCallbackLollipop.onReceiveValue(arr_Uri);
+                    filePathCallbackLollipop = null;
+                } else {
+                    try {
+                        if (filePathCallbackLollipop != null) {
+                            filePathCallbackLollipop.onReceiveValue(null);
+                            filePathCallbackLollipop = null;
                         }
-                            break;
+                    } catch (Exception e) {
+                    }
+                }
+                break;
             case VIEW_REFRESH:
 
-                            if(data!=null){
+                if (data != null) {
 
-                                boolean backflg_refresh = data.getExtras().getBoolean("refresh");
+                    boolean backflg_refresh = data.getExtras().getBoolean("refresh");
 
 
-                                if(webView.getOriginalUrl().contains("android_push=1")){
+                    if (webView.getOriginalUrl().contains("android_push=1")) {
 
-                                        String last_now="";
-                                        if(bm.getHistorylist().size()>0)
-                                            last_now = bm.getHistorylist().get(bm.getHistorylist().size() - 1);
-                                        Log.d("history_refresh_last", bm.getHistorylist().toString());
-                                        if (!last_now.isEmpty() && last_now.equals("intent")) {
-                                            bm.removeAllHistory();
-                                            //bm.addHitory(getString(R.string.home));
-                                            webView.loadUrl(getString(R.string.home));
-                                        } else {
-                                            webView.loadUrl(last_now);
-                                            //onBackPressed();
-                                        }
-                                    //onBackPressed();
-                                }
-                                else if(backflg_refresh==true) {
-                                    webView.reload();
-                                }
+                        String last_now = "";
+                        if (bm.getHistorylist().size() > 0)
+                            last_now = bm.getHistorylist().get(bm.getHistorylist().size() - 1);
+                        Log.d("history_refresh_last", bm.getHistorylist().toString());
+                        if (!last_now.isEmpty() && last_now.equals("intent")) {
+                            bm.removeAllHistory();
+                            //bm.addHitory(getString(R.string.home));
+                            webView.loadUrl(getString(R.string.home));
+                        } else {
+                            webView.loadUrl(last_now);
+                            //onBackPressed();
+                        }
+                        //onBackPressed();
+                    } else if (backflg_refresh == true) {
+                        webView.reload();
+                    }
 
-                                break;
+                    break;
 
-                            }
-                            else{
-                                break;
-                            }
+                } else {
+                    break;
+                }
+            case 15157:
+                Log.d("fcm", "onActivityresult!!!");
+
         }
     }
 

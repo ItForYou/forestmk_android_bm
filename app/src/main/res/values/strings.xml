@@ -4,8 +4,10 @@
     <string name="home">http://forestmarket.co.kr/bbs/board.php?bo_table=deal</string>
     <string name="home2">http://forestmarket.co.kr/</string>
     <string name="chattinglist">http://forestmarket.co.kr/bbs/chatting.list.php</string>
+    <string name="chattinglist_v2">http://forestmarket.co.kr/bbs/chat_list.php</string>
     <string name="g5_bbs">http://forestmarket.co.kr/bbs</string>
     <string name="g5_data">http://forestmarket.co.kr/data/file/chatting/</string>
+    <string name="nodejsupload">http://forestmarket.co.kr/node/uploads/</string>
     <string name="address">http://forestmarket.co.kr/bbs/search_address.php</string>
     <string name="login">http://forestmarket.co.kr/bbs/login_check.php?</string>
     <string name="modify_info">http://forestmarket.co.kr/bbs/register_form.php?w=u</string>
