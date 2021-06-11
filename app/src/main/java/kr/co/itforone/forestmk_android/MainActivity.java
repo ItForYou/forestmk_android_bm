@@ -452,15 +452,15 @@ public class MainActivity extends AppCompatActivity {
             mEndDialog = new EndDialog(MainActivity.this);
             mEndDialog.setCancelable(true);
             mEndDialog.show();
-          /*  Display display = getWindowManager().getDefaultDisplay();
+            Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
 
             Window window = mEndDialog.getWindow();
-            int x = (int)(size.x * 0.8f);
+            int x = (int)(size.x * 8.);
             int y = (int)(size.y* 0.45f);
 
-            window.setLayout(x,y);*/
+            window.setLayout(x,y);
 
             bm.removeAllHistory();
         }

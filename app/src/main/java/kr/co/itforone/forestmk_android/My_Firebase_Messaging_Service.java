@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -29,12 +30,11 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
         Log.d("remote","Message:"+s);
     }
 
-
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> pushMessage = remoteMessage.getData();
 
-
+        Log.d("onMessageReceived","init");
 
         if(remoteMessage.getData().size() > 0) {
 
@@ -49,16 +49,14 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
         String messageBody=remoteMessage.getData().get("message");
         String subject=remoteMessage.getData().get("subject");
         String goUrl=remoteMessage.getData().get("goUrl");
-        String tag=remoteMessage.getNotification().getTag();
-        String channelId = "chat";
-        Log.d("bundle","Message:"+remoteMessage.getNotification().getTag().toString());
+        String tag=remoteMessage.getData().get("tag");
+        String channelId = "noti";
+      //  Log.d("bundle","Message:"+remoteMessage.getNotification().getTag().toString());
 
         if(tag.equals("chat")){
-            channelId = "chat";
             notify_id = 2101;
         }
         else {
-            channelId = "note";
             notify_id = 2102;
         }
 
@@ -77,8 +75,9 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
                         .setContentTitle(subject)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
+                        .setVibrate(new long[]{100,150})
                         .setContentIntent(pendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody));
 
         Notification notification = notificationBuilder.build();
@@ -89,8 +88,9 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_HIGH);
             channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{100,150});
             channel.enableLights(true);
             notificationManager.createNotificationChannel(channel);
 
@@ -99,11 +99,12 @@ public class My_Firebase_Messaging_Service extends FirebaseMessagingService {
                     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build();
 
+
         }
 
         notificationManager.notify(notify_id /* ID of notification */, notification);
-        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-       // vibrator.vibrate(500);
+      /*  Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(300);*/
 
     }
 }

@@ -12,13 +12,13 @@
     android:weightSum="1"
     >
 
-    <ImageView
-        android:layout_width="match_parent"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/dialog_viewpager"
+        android:layout_width="300dp"
         android:layout_height="0dp"
         android:layout_weight="0.7"
-        android:src="@drawable/ad_img"
-        android:scaleType="fitXY"
         />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="-0dp"

@@ -29,6 +29,7 @@ public class Adapter_image extends RecyclerView.Adapter<ViewHolderPage>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderPage holder, int position) {
+
         if(holder instanceof ViewHolderPage){
             ViewHolderPage viewHolder = (ViewHolderPage) holder;
             Glide.with(holder.itemView.getContext())
