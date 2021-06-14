@@ -3,6 +3,7 @@ package kr.co.itforone.forestmk_android.sub;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -30,6 +31,15 @@ class SubViewManager extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+        if(!url.contains(context.getString(R.string.home2))){
+
+            Intent i  = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            i.setPackage("com.android.chrome");
+            context.startActivity(i);
+            return true;
+
+        }
 
       //  Toast.makeText(context.getApplicationContext(),"sub - " +url,Toast.LENGTH_LONG).show();
         context.flg_opensearch=0;

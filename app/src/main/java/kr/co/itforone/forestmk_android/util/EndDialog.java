@@ -56,18 +56,45 @@ public class EndDialog extends Dialog {
             @Override
             public void onResponse(Call<itemModel> call, Response<itemModel> response) {
 
-                Log.d("suc!!",response.body().list_path.toString());
+                Log.d("suc!!",response.body().list_idx.toString());
                 model = response.body();
                 Adapter_dialog adapter_dialog;
                 ArrayList<String> none = new ArrayList<String>();
                 none.add("none");
                 if(model.getList_path().size()>0) {
-                    adapter_dialog = new Adapter_dialog(model.getList_path());
+                    adapter_dialog = new Adapter_dialog(model.getList_path(), model.getList_link(), model.getList_idx());
                 }
                 else{
                     adapter_dialog = new Adapter_dialog(none);
                 }
                 dialog_viewpager.setAdapter(adapter_dialog);
+               /* dialog_viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+
+                    private int myState;
+                    private int currentPosition;
+
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                        super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                        if (myState == ViewPager2.SCROLL_STATE_DRAGGING && currentPosition == position && currentPosition == 0)
+                            dialog_viewpager.setCurrentItem(model.list_link.size()-1);
+                        else if (myState == ViewPager2.SCROLL_STATE_DRAGGING && currentPosition == position && currentPosition == 2)
+                            dialog_viewpager.setCurrentItem(0);
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        currentPosition = position;
+                        super.onPageSelected(position);
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                        myState = state;
+                        super.onPageScrollStateChanged(state);
+                    }
+                });*/
 
             }
 

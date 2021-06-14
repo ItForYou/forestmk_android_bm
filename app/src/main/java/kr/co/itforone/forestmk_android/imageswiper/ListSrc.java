@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 public class ListSrc {
 
-    public String getSrc() {
+       public String getSrc() {
         return src;
     }
 
