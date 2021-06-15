@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
@@ -30,7 +31,7 @@ public class EndDialog extends Dialog {
     private Activity mContext;
     itemModel model;
     @BindView(R.id.dialog_viewpager)    ViewPager2 dialog_viewpager;
-
+    @BindView(R.id.progress_banner)    ProgressBar progress_banner;
 
     public EndDialog(Activity context) {
         super(context);
@@ -62,7 +63,7 @@ public class EndDialog extends Dialog {
                 ArrayList<String> none = new ArrayList<String>();
                 none.add("none");
                 if(model.getList_path().size()>0) {
-                    adapter_dialog = new Adapter_dialog(model.getList_path(), model.getList_link(), model.getList_idx());
+                    adapter_dialog = new Adapter_dialog(model.getList_path(), model.getList_link(), model.getList_idx(), EndDialog.this);
                 }
                 else{
                     adapter_dialog = new Adapter_dialog(none);
